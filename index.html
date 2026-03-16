@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Portfolio professionnel - Functional Support / Application Support / Quality & Training"
+    />
+    <meta property="og:title" content="Fred | Functional Support & Application Support" />
+    <meta
+      property="og:description"
+      content="Support applicatif, coordination opérationnelle et transmission de connaissances."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="./og-cover.svg" />
+    <title>Fred | Functional Support & Application Support</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a href="#top" class="brand">Fred.</a>
+      <nav>
+        <a href="#profil">Profil</a>
+        <a href="#projets">Projets</a>
+        <a href="#competences">Compétences</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero reveal">
+        <p class="kicker">Functional Support L2 • Processus • Formation</p>
+        <h1>Support applicatif, coordination opérationnelle et transmission de connaissances.</h1>
+        <p class="hero-text">
+          Professionnel IT orienté support applicatif et amélioration continue.
+          Expérience confirmée en gestion d'incidents, accompagnement des équipes et
+          documentation opérationnelle.
+        </p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#projets">Voir mes projets (en construction)</a>
+          <a class="btn btn-ghost" href="#contact">Me contacter</a>
+        </div>
+      </section>
+
+      <section id="profil" class="panel reveal">
+        <h2>Profil</h2>
+        <p>
+          Plus de 20 ans d'expérience dans le support technique et la relation client chez Swisscom,
+          avec une forte dimension qualité, coaching et standardisation des pratiques. Certifié ITIL
+          v4, je travaille avec une approche orientée SLA et amélioration continue.
+        </p>
+        <p>
+          En parallèle, je développe des projets personnels de homelab (Linux, Docker, monitoring,
+          réseau, automatisation), souvent avec l'appui d'outils IA. Ces projets relèvent d'un cadre
+          d'apprentissage personnel et non d'une expérience professionnelle directe.
+        </p>
+      </section>
+
+      <section id="projets" class="reveal">
+        <div class="section-head">
+          <h2>Projets représentatifs</h2>
+          <p>Projets personnels d'apprentissage pour renforcer des compétences techniques.</p>
+        </div>
+
+        <article class="panel">
+          <h3>Stack perso principale: VPS infomaniak</h3>
+          <p>
+            Environnement personnel auto-hébergé sur VPS Infomaniak, orienté exploitation,
+            sécurité, observabilité et sauvegarde/migration.
+          </p>
+          <ul>
+            <li>Entrée sécurisée: Traefik v3 (HTTPS, certificats, routage par sous-domaines)</li>
+            <li>
+              Services web:
+              <a href="https://wiki.tuxdrake.ch/" target="_blank" rel="noopener noreferrer">OtterWiki</a>
+              et
+              <a href="https://link.tuxdrake.ch/login/" target="_blank" rel="noopener noreferrer">Linkding</a>
+              avec politiques d'accès et hardening HTTP
+            </li>
+            <li>
+              Observabilité:
+              <a href="https://admin.tuxdrake.ch/login" target="_blank" rel="noopener noreferrer">Grafana</a>
+              + Loki + Promtail + Prometheus + dashboards dédiés
+            </li>
+            <li>Sécurité: CrowdSec (détection/ban) + corrélation logs/métriques</li>
+            <li>Résilience: procédures de backup/restore et migration documentées (tar + rsync)</li>
+            <li>Approche runbook: documentation opérationnelle et vérifications post-migration</li>
+          </ul>
+        </article>
+
+        <div class="cards">
+          <article class="card">
+            <h3>Lab perso: Heltec Wireless Tracker + Meshtastic (Docker)</h3>
+            <p>
+              Projet personnel d'expérimentation autour du Heltec Wireless Tracker avec
+              Meshtastic en Docker pour tester la communication LoRa/LoRaWAN.
+            </p>
+            <ul>
+              <li>Exploration réseau maillé et communication longue portée</li>
+              <li>Tests d'intégration entre matériel, firmware et services auto-hébergés</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Lab perso: Gitea self-hosted (Docker)</h3>
+            <p>
+              Mise en place de Gitea en environnement personnel avec Docker, configuration de
+              sécurité et stratégie de sauvegarde/restauration des dépôts.
+            </p>
+            <p>
+              Lien:
+              <a href="https://github.com/fredoss-vs/fredoss-vs.github.io/tree/main/gitea-self-hosted" target="_blank" rel="noopener noreferrer">Voir le projet</a>
+            </p>
+            <ul>
+              <li>Gestion locale des dépôts Git et de la connaissance</li>
+              <li>Procédures de backup complètes (repos + configuration)</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Lab perso: Home Assistant Supervised (Debian 12) + MQTT + Zigbee2MQTT</h3>
+            <p>
+              Intégration domotique en environnement personnel, basée sur Debian 12, avec
+              procédures d'installation, backup et troubleshooting.
+            </p>
+            <ul>
+              <li>Interopérabilité des services</li>
+              <li>Résolution de problèmes en environnement réel</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Lab perso: Raspberry Pi NightCam (Debian 11, MotionEye, servo MG996R)</h3>
+            <p>
+              Projet personnel de caméra NightCam sur Raspberry Pi avec MotionEye en Docker,
+              contrôle moteur via partage USB et contrôle de la caméra via Home Assistant, avec
+              couche Python/Flask/API et exécution via service systemd.
+            </p>
+            <p>
+              Lien:
+              <a href="https://github.com/fredoss-vs/fredoss-vs.github.io/tree/main/RaspberryPiNightCam" target="_blank" rel="noopener noreferrer">Voir le projet</a>
+            </p>
+            <ul>
+              <li>Intégration matériel + logiciel en environnement Linux</li>
+              <li>Pilotage servo MG996R et intégration Home Assistant</li>
+              <li>API Python/Flask pour le contrôle et l'automatisation</li>
+              <li>Déploiement en service persistant via systemd.service</li>
+              <li>Documentation technique d'installation et d'exploitation</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Projet perso: ThingSpeak SCD30 + Node-RED + MariaDB</h3>
+            <p>
+              Pipeline personnel d'acquisition et de traitement de données capteur (SCD30), avec
+              ESP32 programmé via Arduino, flux Node-RED et stockage MariaDB.
+            </p>
+            <p>
+              Lien:
+              <a href="https://thingspeak.mathworks.com/channels/2554355" target="_blank" rel="noopener noreferrer">Visualiser les données IoT</a>
+            </p>
+            <ul>
+              <li>Collecte et structuration de données IoT</li>
+              <li>Intégration ESP32 (Arduino) pour l'acquisition capteur</li>
+              <li>Visualisation et exploitation technique des mesures</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Lab perso: Semaphore UI + Ansible sur Raspberry Pi</h3>
+            <p>
+              Projet en cours de mise en place. La solution n'est pas encore fonctionnelle en
+              l'état actuel.
+            </p>
+            <ul>
+              <li>Exploration Ansible et orchestration locale</li>
+              <li>Apprentissage progressif des bonnes pratiques d'automatisation</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="competences" class="panel reveal">
+        <h2>Compétences clés</h2>
+        <div class="skills-grid">
+          <div>
+            <h3>Support & ITSM</h3>
+            <p>
+              Incident / Problem Management, ITIL v4, SLA, ticketing (BMC, Jira, CRM),
+              expertise Télécom B2C (DHCP, WAN/LAN, Wi-Fi, VoIP, IPTV, diagnostic réseau).
+            </p>
+          </div>
+          <div>
+            <h3>Infrastructure (personnel)</h3>
+            <p>Linux, Docker/Podman, Traefik, Nginx, Gitea, WireGuard, UFW, SSH.</p>
+          </div>
+          <div>
+            <h3>Observabilité (personnel)</h3>
+            <p>Grafana, Prometheus, Uptime Kuma, analyse de logs et diagnostics.</p>
+          </div>
+          <div>
+            <h3>Automatisation assistée par IA (personnel)</h3>
+            <p>Bash, Python, Node-RED, scripts de backup/restore et procédures d'exploitation.</p>
+          </div>
+          <div>
+            <h3>Transmission</h3>
+            <p>Formation, coaching, documentation claire, vulgarisation technique, support équipes.</p>
+          </div>
+          <div>
+            <h3>Langues</h3>
+            <p>Français (natif), Allemand (B2), Anglais (B1).</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="impact reveal">
+        <h2>Valeur ajoutée</h2>
+        <p>
+          J'apporte de la valeur sur l'analyse d'incidents, la clarté des processus et la montée en
+          compétence des équipes. Mes projets personnels me permettent d'accélérer mon apprentissage
+          technique et de rester à jour.
+        </p>
+      </section>
+    </main>
+
+    <footer id="contact" class="site-footer reveal">
+      <h2>Contact</h2>
+      <p>Disponible pour des rôles Functional Support / Application Support / Quality & Training, ainsi que pour des fonctions de coordination opérationnelle (incident, processus, amélioration continue).</p>
+      <p class="pgp-line">
+        Clé PGP (fingerprint):
+        <span class="pgp-fingerprint" aria-label="Fingerprint PGP">
+          e296 280e a909 a087 ea1f 9c4f 7cce 7daa ecd0 0191
+        </span>
+        -
+        <a href="./pubkey.asc" download="pubkey.asc">Télécharger pubkey.asc</a>
+      </p>
+      <div class="footer-actions">
+        <a class="btn btn-primary" href="mailto:frederic.rossier@pm.me">Contact</a>
+      <!--<a class="btn btn-ghost" href="https://linkedin.com/in/xxxxxx"target="_blank" rel="noopener noreferrer">Linkedin</a>
+        <a class="btn btn-ghost" href="https://github.com/xxxxx" target="_blank" rel="noopener noreferrer">Github</a>
+      </div> -->
+      <small>© 2026 Fred</small>
+    </footer>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

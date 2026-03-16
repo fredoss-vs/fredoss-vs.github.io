@@ -1,0 +1,64 @@
+# =========================
+# OS / Système
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================
+# Logs
+# =========================
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =========================
+# Node / Frontend
+# =========================
+node_modules/
+dist/
+build/
+.cache/
+.tmp/
+
+# =========================
+# Python (si tu touches un peu)
+# =========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+.env/
+
+# =========================
+# Docker
+# =========================
+*.env
+.env.*
+docker-compose.override.yml
+
+# =========================
+# IDE / Editeurs
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# =========================
+# Fichiers sensibles
+# =========================
+*.key
+*.pem
+*.crt
+*.asc
+
+# =========================
+# Divers
+# =========================
+*.bak
+*.tmp
+*.old

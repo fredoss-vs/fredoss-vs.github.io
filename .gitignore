@@ -24,7 +24,7 @@ build/
 .tmp/
 
 # =========================
-# Python (si tu touches un peu)
+# Python
 # =========================
 __pycache__/
 *.pyc

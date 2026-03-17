@@ -1,7 +1,7 @@
 # Ansible avec Semaphore UI — Playbooks et scripts avancés
 
 > **Stack** : Semaphore UI v2.17.x · Ansible 2.14+ · Raspberry Pi 4 (arm64)  
-> **Hôte** : `user@10.0.0.20` · Playbooks : `/home/user/semaphore/playbooks`  
+> **Hôte** : `derf@10.0.0.20` · Playbooks : `/home/derf/semaphore/playbooks`  
 > **Révision** : 2026-03-17
 
 ---
@@ -72,7 +72,7 @@ Le script Bash reste pertinent pour des vérifications ponctuelles ou des one-sh
 
 ### 3.1 Script APT maintenance — nœud unique
 
-`cd /home/user/semaphore/playbooks && sudo vi apt_maintenance.sh`
+`cd /home/derf/semaphore/playbooks && sudo vi apt_maintenance.sh`
 
 ```bash
 #!/bin/bash
@@ -132,7 +132,7 @@ EOF
 
 ### 3.2 Variante multi-machines
 
-`cd /home/user/semaphore/playbooks && sudo vi apt_maintenance_multi.sh`
+`cd /home/derf/semaphore/playbooks && sudo vi apt_maintenance_multi.sh`
 
 ```bash
 #!/bin/bash
@@ -178,7 +178,7 @@ done
 
 Suffisante pour les cas standards sans besoin de debug fin.
 
-`cd /home/user/semaphore/playbooks && sudo vi apt_simple.yml`
+`cd /home/derf/semaphore/playbooks && sudo vi apt_simple.yml`
 
 ```yaml
 ---
@@ -199,7 +199,7 @@ Suffisante pour les cas standards sans besoin de debug fin.
 
 Vérifie la compatibilité de l'OS avant d'exécuter, affiche les paquets upgradables et fournit un résumé détaillé.
 
-`cd /home/user/semaphore/playbooks && sudo vi apt_maintenance.yml`
+`cd /home/derf/semaphore/playbooks && sudo vi apt_maintenance.yml`
 
 ```yaml
 ---
@@ -260,7 +260,7 @@ Vérifie la compatibilité de l'OS avant d'exécuter, affiche les paquets upgrad
 
 Pour les machines de laboratoire ou les mises à jour majeures acceptant les changements de dépendances.
 
-`cd /home/user/semaphore/playbooks && sudo vi apt_dist_upgrade.yml`
+`cd /home/derf/semaphore/playbooks && sudo vi apt_dist_upgrade.yml`
 
 ```yaml
 ---
@@ -303,7 +303,7 @@ Pour les machines de laboratoire ou les mises à jour majeures acceptant les cha
 
 Permet de créer des Task Templates distincts dans Semaphore pour chaque phase de la maintenance, ou d'exécuter toutes les phases en une seule passe avec `--tags apt`.
 
-`cd /home/user/semaphore/playbooks && sudo vi apt_tagged.yml`
+`cd /home/derf/semaphore/playbooks && sudo vi apt_tagged.yml`
 
 ```yaml
 ---
@@ -430,10 +430,10 @@ ansible_python_interpreter=/usr/bin/python3
 Après chaque création ou modification de playbook :
 
 ```bash
-cd /home/user/semaphore/playbooks
+cd /home/derf/semaphore/playbooks
 sudo git add -A
 sudo git commit -m "Description du changement"
-sudo chown -R 1001:0 /home/user/semaphore/playbooks
+sudo chown -R 1001:0 /home/derf/semaphore/playbooks
 ```
 
 > Le `sudo chown` final est nécessaire car `sudo git` recrée certains fichiers `.git/` avec l'ownership root, ce qui bloquerait le `git pull` de Semaphore lors de la prochaine exécution.
@@ -521,4 +521,4 @@ Exemples d'utilisation combinés :
 
 ---
 
-*Document généré le 2026-03-17 — Semaphore UI v2.17.x · Ansible 2.14+ · arm64 · user@10.0.0.20*
+*Document généré le 2026-03-17 — Semaphore UI v2.17.x · Ansible 2.14+ · arm64 · derf@10.0.0.20*

@@ -56,7 +56,6 @@
 ## ⚙️ Playbooks et scripts
 - [Playbooks et scripts avancés](docs/Playbooks_et_scripts_avances.md)
 
-
 ---
 
 ## 1. Prérequis

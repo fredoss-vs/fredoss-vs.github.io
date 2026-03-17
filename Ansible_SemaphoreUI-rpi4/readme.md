@@ -1,4 +1,4 @@
-# Ansible - Semaphore UI — Déploiement Production sur Raspberry Pi 4 avec Docker V2
+# Ansible / Semaphore UI - Déploiement de base pour expérimentation sur Raspberry Pi 4 avec Docker Compose V2
 
 > **Stack** : Semaphore UI v2.17.x · PostgreSQL 16 · Nginx (HTTPS auto-signé) · Docker Compose v2  
 > **Cible** : Raspberry Pi 4 (arm64) · LAN privé · Gestion Ansible multi-nœuds  
@@ -9,7 +9,7 @@
 
 ## Table des matières
 
-- [Ansible - Semaphore UI — Déploiement Production sur Raspberry Pi 4 avec Docker V2](#ansible---semaphore-ui--déploiement-production-sur-raspberry-pi-4-avec-docker-v2)
+- [Ansible / Semaphore UI - Déploiement de base pour expérimentation sur Raspberry Pi 4 avec Docker Compose V2](#ansible--semaphore-ui---déploiement-de-base-pour-expérimentation-sur-raspberry-pi-4-avec-docker-compose-v2)
   - [Table des matières](#table-des-matières)
   - [1. Prérequis](#1-prérequis)
   - [2. Structure du projet](#2-structure-du-projet)

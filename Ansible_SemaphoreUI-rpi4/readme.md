@@ -1,15 +1,15 @@
-# Semaphore UI — Déploiement Production sur Raspberry Pi 4
+# Ansible - Semaphore UI — Déploiement Production sur Raspberry Pi 4 avec Docker V2
 
 > **Stack** : Semaphore UI v2.17.x · PostgreSQL 16 · Nginx (HTTPS auto-signé) · Docker Compose v2  
 > **Cible** : Raspberry Pi 4 (arm64) · LAN privé · Gestion Ansible multi-nœuds  
-> **Hôte** : `derf@10.0.0.20` · Répertoire : `/home/derf/semaphore`  
+> **Hôte** : `user@10.0.0.20` · Répertoire : `/home/user/semaphore`  
 > **Révision** : 2026-03-17
 
 ---
 
 ## Table des matières
 
-- [Semaphore UI — Déploiement Production sur Raspberry Pi 4](#semaphore-ui--déploiement-production-sur-raspberry-pi-4)
+- [Ansible - Semaphore UI — Déploiement Production sur Raspberry Pi 4 avec Docker V2](#ansible---semaphore-ui--déploiement-production-sur-raspberry-pi-4-avec-docker-v2)
   - [Table des matières](#table-des-matières)
   - [1. Prérequis](#1-prérequis)
   - [2. Structure du projet](#2-structure-du-projet)
@@ -76,7 +76,7 @@ docker --version && docker compose version && openssl version
 ## 2. Structure du projet
 
 ```
-/home/derf/semaphore/
+/home/user/semaphore/
 ├── .env                      ← Variables d'environnement (non versionné)
 ├── docker-compose.yml        ← Définition de la stack
 ├── gitconfig-system          ← Config Git système montée dans le container
@@ -99,8 +99,8 @@ docker --version && docker compose version && openssl version
 ```
 
 ```bash
-mkdir -p /home/derf/semaphore/{nginx/ssl,scripts,backup,backups,ssh_keys,playbooks}
-cd /home/derf/semaphore
+mkdir -p /home/user/semaphore/{nginx/ssl,scripts,backup,backups,ssh_keys,playbooks}
+cd /home/user/semaphore
 ```
 
 ---
@@ -128,7 +128,7 @@ SEMAPHORE_ADMIN_EMAIL=admin@lan.local
 SEMAPHORE_ACCESS_KEY_ENCRYPTION=CHANGE_ME_32CHARS_RANDOM_STRING
 
 # ── Clés SSH du contrôleur (montées en lecture seule) ────
-SSH_KEYS_PATH=/home/derf/semaphore/ssh_keys
+SSH_KEYS_PATH=/home/user/semaphore/ssh_keys
 
 # ── Réseau LAN ───────────────────────────────────────────
 SERVER_CN=semaphore.lan
@@ -197,7 +197,7 @@ services:
       - semaphore_data:/home/semaphore
       - semaphore_tmp:/tmp/semaphore
       - ${SSH_KEYS_PATH}:/home/semaphore/.ssh:ro
-      - /home/derf/semaphore/playbooks:/home/semaphore/playbooks
+      - /home/user/semaphore/playbooks:/home/semaphore/playbooks
       - ./gitconfig-system:/etc/gitconfig:ro
     networks:
       - semaphore_net
@@ -420,7 +420,7 @@ find /backups -name "*.sql.gz" -mtime +7 -delete
 Rendre exécutable **sur l'hôte** avant le premier démarrage :
 
 ```bash
-chmod +x /home/derf/semaphore/backup/backup.sh
+chmod +x /home/user/semaphore/backup/backup.sh
 ```
 
 ---
@@ -430,7 +430,7 @@ chmod +x /home/derf/semaphore/backup/backup.sh
 Ce fichier est monté sur `/etc/gitconfig` dans le container. Il est lu par tous les processus Git sans exception, y compris les sous-processus lancés par Semaphore lors de l'exécution des tâches. Il résout l'erreur `fatal: detected dubious ownership` qui survient lorsque le répertoire `playbooks` appartient à un UID différent de l'utilisateur courant du container.
 
 ```bash
-cat > /home/derf/semaphore/gitconfig-system <<'EOF'
+cat > /home/user/semaphore/gitconfig-system <<'EOF'
 [safe]
   directory = *
 EOF
@@ -444,8 +444,8 @@ EOF
 
 ```bash
 # ── Étape 1 : Créer la structure ────────────────────────────────
-mkdir -p /home/derf/semaphore/{nginx/ssl,scripts,backup,backups,ssh_keys,playbooks}
-cd /home/derf/semaphore
+mkdir -p /home/user/semaphore/{nginx/ssl,scripts,backup,backups,ssh_keys,playbooks}
+cd /home/user/semaphore
 
 # ── Étape 2 : Créer tous les fichiers ───────────────────────────
 #   .env · docker-compose.yml · nginx/nginx.conf
@@ -467,7 +467,7 @@ openssl rand -base64 32
 # (voir section 5)
 
 # ── Étape 7 : Initialiser le repository Git des playbooks ───────
-cd /home/derf/semaphore/playbooks
+cd /home/user/semaphore/playbooks
 sudo git init && sudo git checkout -b main
 sudo git config --global user.email "semaphore@lan"
 sudo git config --global user.name "Semaphore"
@@ -476,8 +476,8 @@ sudo git add .gitkeep
 sudo git commit -m "Initial commit"
 
 # Ownership UID 1001 = utilisateur semaphore dans le container
-sudo chown -R 1001:0 /home/derf/semaphore/playbooks
-cd /home/derf/semaphore
+sudo chown -R 1001:0 /home/user/semaphore/playbooks
+cd /home/user/semaphore
 
 # ── Étape 8 : Démarrer la stack ─────────────────────────────────
 docker compose up -d
@@ -504,15 +504,15 @@ Semaphore exécute les scripts et playbooks via SSH. Une paire de clés dédiée
 ### 5.1 Génération de la paire de clés
 
 ```bash
-# Sur le Raspberry Pi 4 — utilisateur derf
-chmod 700 /home/derf/semaphore/ssh_keys
+# Sur le Raspberry Pi 4 — utilisateur user
+chmod 700 /home/user/semaphore/ssh_keys
 
 ssh-keygen -t ed25519 -C "semaphore@lan" \
-  -f /home/derf/semaphore/ssh_keys/semaphore_ansible \
+  -f /home/user/semaphore/ssh_keys/semaphore_ansible \
   -N ""
 
-chmod 600 /home/derf/semaphore/ssh_keys/semaphore_ansible
-chmod 644 /home/derf/semaphore/ssh_keys/semaphore_ansible.pub
+chmod 600 /home/user/semaphore/ssh_keys/semaphore_ansible
+chmod 644 /home/user/semaphore/ssh_keys/semaphore_ansible.pub
 ```
 
 ### 5.2 Distribution sur les nœuds cibles
@@ -521,16 +521,16 @@ La clé publique doit être déposée sur **chaque nœud** que Semaphore devra p
 
 ```bash
 # Exemple : nœud Raspberry Pi à 10.0.0.100, user pi
-ssh-copy-id -i /home/derf/semaphore/ssh_keys/semaphore_ansible.pub pi@10.0.0.100
+ssh-copy-id -i /home/user/semaphore/ssh_keys/semaphore_ansible.pub pi@10.0.0.100
 
 # Répéter pour chaque nœud supplémentaire
-ssh-copy-id -i /home/derf/semaphore/ssh_keys/semaphore_ansible.pub pi@10.0.0.101
-ssh-copy-id -i /home/derf/semaphore/ssh_keys/semaphore_ansible.pub ubuntu@10.0.0.50
+ssh-copy-id -i /home/user/semaphore/ssh_keys/semaphore_ansible.pub pi@10.0.0.101
+ssh-copy-id -i /home/user/semaphore/ssh_keys/semaphore_ansible.pub ubuntu@10.0.0.50
 ```
 
 > Si `ssh-copy-id` n'est pas disponible :
 > ```bash
-> cat /home/derf/semaphore/ssh_keys/semaphore_ansible.pub | \
+> cat /home/user/semaphore/ssh_keys/semaphore_ansible.pub | \
 >   ssh pi@10.0.0.100 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
 > ```
 
@@ -539,7 +539,7 @@ ssh-copy-id -i /home/derf/semaphore/ssh_keys/semaphore_ansible.pub ubuntu@10.0.0
 Tester la connexion **depuis le Pi hôte** avant de configurer Semaphore :
 
 ```bash
-ssh -i /home/derf/semaphore/ssh_keys/semaphore_ansible \
+ssh -i /home/user/semaphore/ssh_keys/semaphore_ansible \
     -o StrictHostKeyChecking=no \
     pi@10.0.0.100 "echo 'SSH OK'"
 ```
@@ -565,10 +565,10 @@ Le répertoire `playbooks` monté depuis l'hôte doit appartenir à **UID 1001**
 
 ```bash
 # Vérifier l'ownership
-ls -la /home/derf/semaphore/playbooks/
+ls -la /home/user/semaphore/playbooks/
 
 # Réinitialiser si nécessaire
-sudo chown -R 1001:0 /home/derf/semaphore/playbooks
+sudo chown -R 1001:0 /home/user/semaphore/playbooks
 ```
 
 ### 6.2 Procédure de commit
@@ -578,10 +578,10 @@ Toute modification de script ou de playbook doit être commitée — Semaphore e
 **Bloc à exécuter après chaque modification :**
 
 ```bash
-cd /home/derf/semaphore/playbooks
+cd /home/user/semaphore/playbooks
 sudo git add -A
 sudo git commit -m "Description du changement"
-sudo chown -R 1001:0 /home/derf/semaphore/playbooks
+sudo chown -R 1001:0 /home/user/semaphore/playbooks
 ```
 
 > ⚠️ Sans ce commit, Semaphore exécute l'ancienne version du script.  
@@ -591,7 +591,7 @@ sudo chown -R 1001:0 /home/derf/semaphore/playbooks
 
 Ce script se connecte en SSH sur un nœud distant et liste les paquets disponibles à la mise à jour.
 
-`cd /home/derf/semaphore/playbooks && sudo vi apt_check.sh`
+`cd /home/user/semaphore/playbooks && sudo vi apt_check.sh`
 
 ```bash
 #!/bin/bash
@@ -610,10 +610,10 @@ ssh -i /home/semaphore/.ssh/semaphore_ansible \
 Commiter :
 
 ```bash
-cd /home/derf/semaphore/playbooks
+cd /home/user/semaphore/playbooks
 sudo git add apt_check.sh
 sudo git commit -m "Add apt_check script for pi@10.0.0.100"
-sudo chown -R 1001:0 /home/derf/semaphore/playbooks
+sudo chown -R 1001:0 /home/user/semaphore/playbooks
 ```
 
 Points critiques :
@@ -644,7 +644,7 @@ Type : SSH Key
 Coller le contenu de la clé privée :
 
 ```bash
-cat /home/derf/semaphore/ssh_keys/semaphore_ansible
+cat /home/user/semaphore/ssh_keys/semaphore_ansible
 ```
 
 ---
@@ -754,17 +754,17 @@ Les dumps sont produits automatiquement chaque nuit à **02h00** par le containe
 ```bash
 docker exec semaphore_db pg_dump \
   -U semaphore semaphore \
-  | gzip > /home/derf/semaphore/backups/semaphore_manual_$(date +%Y%m%d_%H%M).sql.gz
+  | gzip > /home/user/semaphore/backups/semaphore_manual_$(date +%Y%m%d_%H%M).sql.gz
 ```
 
 ### Restauration
 
 ```bash
 # Lister les sauvegardes disponibles
-ls -lh /home/derf/semaphore/backups/
+ls -lh /home/user/semaphore/backups/
 
 # Restaurer un dump
-gunzip -c /home/derf/semaphore/backups/semaphore_YYYYMMDD_HHMM.sql.gz \
+gunzip -c /home/user/semaphore/backups/semaphore_YYYYMMDD_HHMM.sql.gz \
   | docker exec -i semaphore_db psql -U semaphore semaphore
 ```
 
@@ -784,7 +784,7 @@ Le certificat auto-signé inclut les **Subject Alternative Names (SAN)** pour l'
 ### Linux (clients sur le LAN)
 
 ```bash
-scp derf@10.0.0.20:/home/derf/semaphore/nginx/ssl/semaphore.crt /tmp/
+scp user@10.0.0.20:/home/user/semaphore/nginx/ssl/semaphore.crt /tmp/
 sudo cp /tmp/semaphore.crt /usr/local/share/ca-certificates/semaphore-lan.crt
 sudo update-ca-certificates
 ```
@@ -845,7 +845,7 @@ Pour des tâches multi-nœuds récurrentes, utiliser un playbook Ansible plutôt
 
 ### Playbook `apt_upgrade.yml`
 
-`cd /home/derf/semaphore/playbooks && sudo vi apt_upgrade.yml`
+`cd /home/user/semaphore/playbooks && sudo vi apt_upgrade.yml`
 
 ```yaml
 ---
@@ -877,10 +877,10 @@ Pour des tâches multi-nœuds récurrentes, utiliser un playbook Ansible plutôt
 ```
 
 ```bash
-cd /home/derf/semaphore/playbooks
+cd /home/user/semaphore/playbooks
 sudo git add apt_upgrade.yml
 sudo git commit -m "Add apt_upgrade playbook"
-sudo chown -R 1001:0 /home/derf/semaphore/playbooks
+sudo chown -R 1001:0 /home/user/semaphore/playbooks
 ```
 
 ### Task Template Ansible
@@ -970,4 +970,4 @@ ss -tlnp | grep -E ':(80|443|8080|8443|9080|9443|5432)'
 
 ---
 
-*Document mis à jour le 2026-03-17 — Stack Semaphore UI v2.17.x · arm64 · derf@10.0.0.20*
+*Document mis à jour le 2026-03-17 — Stack Semaphore UI v2.17.x · arm64 · user@10.0.0.20*

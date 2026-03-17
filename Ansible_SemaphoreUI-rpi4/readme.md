@@ -11,6 +11,7 @@
 
 - [Ansible / Semaphore UI - Déploiement de base pour expérimentation sur Raspberry Pi 4 avec Docker Compose V2](#ansible--semaphore-ui---déploiement-de-base-pour-expérimentation-sur-raspberry-pi-4-avec-docker-compose-v2)
   - [Table des matières](#table-des-matières)
+  - [⚙️ Playbooks et scripts](#️-playbooks-et-scripts)
   - [1. Prérequis](#1-prérequis)
   - [2. Structure du projet](#2-structure-du-projet)
   - [3. Fichiers de configuration](#3-fichiers-de-configuration)
@@ -51,6 +52,10 @@
     - [Bash vs Ansible — choix rapide](#bash-vs-ansible--choix-rapide)
   - [12. Coexistence avec d'autres stacks Docker](#12-coexistence-avec-dautres-stacks-docker)
   - [13. Sécurité et recommandations](#13-sécurité-et-recommandations)
+
+## ⚙️ Playbooks et scripts
+- [Playbooks et scripts avancés](docs/Playbooks_et_scripts_avances.md)
+
 
 ---
 

@@ -55,6 +55,8 @@ docker-compose.override.yml
 *.pem
 *.crt
 *.asc
+gitpush.bash
+
 
 # =========================
 # Divers

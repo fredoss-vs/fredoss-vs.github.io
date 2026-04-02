@@ -2,7 +2,7 @@
 
 > **Stack** : Semaphore UI v2.17.x · PostgreSQL 16 · Nginx (HTTPS auto-signé) · Docker Compose v2  
 > **Cible** : Raspberry Pi 4 (arm64) · LAN privé · Gestion Ansible multi-nœuds  
-> **Hôte** : `user@10.0.0.20` · Répertoire : `/home/user/semaphore`  
+> **Hôte** : `user@10.0.0.yy` · Répertoire : `/home/user/semaphore`  
 > **Révision** : 2026-03-17
 
 ---
@@ -136,7 +136,7 @@ SSH_KEYS_PATH=/home/user/semaphore/ssh_keys
 
 # ── Réseau LAN ───────────────────────────────────────────
 SERVER_CN=semaphore.lan
-SERVER_IP=10.0.0.20
+SERVER_IP=10.0.0.yy
 ```
 
 ---
@@ -491,7 +491,7 @@ docker compose ps
 docker compose logs -f semaphore
 
 # ── Étape 10 : Accéder à l'interface ────────────────────────────
-# https://10.0.0.20:9443
+# https://10.0.0.yy:9443
 # Login : admin / valeur de SEMAPHORE_ADMIN_PASSWORD
 ```
 
@@ -788,7 +788,7 @@ Le certificat auto-signé inclut les **Subject Alternative Names (SAN)** pour l'
 ### Linux (clients sur le LAN)
 
 ```bash
-scp user@10.0.0.20:/home/user/semaphore/nginx/ssl/semaphore.crt /tmp/
+scp user@10.0.0.yy:/home/user/semaphore/nginx/ssl/semaphore.crt /tmp/
 sudo cp /tmp/semaphore.crt /usr/local/share/ca-certificates/semaphore-lan.crt
 sudo update-ca-certificates
 ```
@@ -839,7 +839,7 @@ docker exec semaphore_app cat /etc/gitconfig
 docker exec semaphore_app git -C /home/semaphore/playbooks status
 ```
 
-> Interface web : **https://10.0.0.20:9443** · Login : `admin` / valeur de `SEMAPHORE_ADMIN_PASSWORD`
+> Interface web : **https://10.0.0.yy:9443** · Login : `admin` / valeur de `SEMAPHORE_ADMIN_PASSWORD`
 
 ---
 
@@ -974,4 +974,4 @@ ss -tlnp | grep -E ':(80|443|8080|8443|9080|9443|5432)'
 
 ---
 
-*Document mis à jour le 2026-03-17 — Stack Semaphore UI v2.17.x · arm64 · user@10.0.0.20*
+*Document mis à jour le 2026-03-17 — Stack Semaphore UI v2.17.x · arm64 · user@10.0.0.yy*

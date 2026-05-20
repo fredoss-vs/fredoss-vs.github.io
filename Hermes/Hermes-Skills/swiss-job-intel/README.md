@@ -1,26 +1,26 @@
 # swiss-job-intel
 
-**Hermes skill — Swiss job market intelligence for any candidate profile.**
+**Skill Hermes — Veille emploi Suisse pour tout profil candidat.**
 
-Scrapes active Swiss job boards, enriches candidate terms with ESCO/ISCO taxonomy, scores every offer against the candidate profile, and exports ranked results as CSV + Markdown — with zero LLM token cost after the initial profiling step.
+Scrape les principales plateformes d'emploi suisses, enrichit les termes candidat via la taxonomie ESCO/ISCO, score chaque offre par rapport au profil, et exporte les résultats classés en CSV + Markdown — avec un coût LLM nul après l'étape de profilage initial.
 
 ---
 
-## What is a Hermes skill?
+## Qu'est-ce qu'un skill Hermes ?
 
-[Hermes](https://github.com/your-org/hermes-agent) is an LLM agent framework that invokes structured skills from a `SKILL.md` instruction file. Each skill defines phases the agent executes in order: reading inputs, running autonomous scripts, and presenting results.
+[Hermes](https://github.com/your-org/hermes-agent) est un framework d'agent LLM qui invoque des skills structurés depuis un fichier d'instructions `SKILL.md`. Chaque skill définit des phases exécutées dans l'ordre : lecture des entrées, exécution de scripts autonomes, présentation des résultats.
 
-This skill is invoked by placing `SKILL.md` in the agent's skill directory. The agent reads it, profiles the candidate once, then hands off entirely to the Python pipeline.
+Ce skill est invoqué en plaçant `SKILL.md` dans le répertoire des skills de l'agent. L'agent lit le fichier, profile le candidat une seule fois, puis passe entièrement la main au pipeline Python.
 
 ```
-User provides cv.md + bilan.md
+L'utilisateur fournit cv.md + bilan.md
         ↓
-Hermes agent reads SKILL.md → profiles candidate → writes profile_cache.json
+L'agent Hermes lit SKILL.md → profile le candidat → écrit profile_cache.json
         ↓
-Python pipeline runs autonomously (0 LLM tokens):
+Le pipeline Python s'exécute de façon autonome (0 token LLM) :
   enrich_profile_esco.py → scrape_ch_jobs.py → score_export.py
         ↓
-Agent reads done.flag + summary.json → presents results to user
+L'agent lit done.flag + summary.json → présente les résultats à l'utilisateur
 ```
 
 ---
@@ -28,167 +28,149 @@ Agent reads done.flag + summary.json → presents results to user
 ## Architecture
 
 ```
-┌─ Hermes Agent (LLM) ────────────────────────┐   ┌─ Python Pipeline (0 tokens) ───────────────┐
+┌─ Agent Hermes (LLM) ────────────────────────┐   ┌─ Pipeline Python (0 token) ────────────────┐
 │                                              │   │                                            │
-│  Phase 0  — detect state (flag / cache)      │   │  orchestrate.py profile_cache.json         │
-│  Phase 1  — read cv.md + bilan.md            │   │    1. enrich_profile_esco.py               │
-│  Phase 2  — build profile{} + cache          │   │    2. scrape_ch_jobs.py                    │
-│  Phase 3  — launch pipeline  ───────────────►│   │    3. score_export.py                      │
-│  Phase 5  — present results  ◄───────────────│   │    → results/done.flag                    │
-│             (done.flag + summary.json)        │   │    → results/DD-MM-YYYY_output.csv         │
-└──────────────────────────────────────────────┘   │    → results/DD-MM-YYYY_output.md          │
-                                                   │    → results/DD-MM-YYYY_summary.json       │
+│  Phase 0  — détection d'état (flag / cache) │   │  orchestrate.py profile_cache.json         │
+│  Phase 1  — lecture cv.md + bilan.md        │   │    1. enrich_profile_esco.py               │
+│  Phase 2  — construction profile{} + cache  │   │    2. scrape_ch_jobs.py                    │
+│  Phase 3  — lancement pipeline  ───────────►│   │    3. score_export.py                      │
+│  Phase 5  — présentation résultats  ◄───────│   │    → results/done.flag                    │
+│             (done.flag + summary.json)       │   │    → results/JJ-MM-AAAA_output.csv         │
+└──────────────────────────────────────────────┘   │    → results/JJ-MM-AAAA_output.md          │
+                                                   │    → results/JJ-MM-AAAA_summary.json       │
                                                    └────────────────────────────────────────────┘
 ```
 
-**Cost model:** the LLM reads `cv.md` and `bilan.md` exactly once. All subsequent runs (same candidate, new search) skip directly to Phase 3 via `profile_cache.json`. Presenting results costs ~300 tokens (`done.flag` + `summary.json`).
+**Modèle de coût :** le LLM lit `cv.md` et `bilan.md` exactement une fois. Tous les runs suivants (même candidat, nouvelle recherche) sautent directement à la Phase 3 via `profile_cache.json`. La présentation des résultats coûte ~300 tokens (`done.flag` + `summary.json`).
 
 ---
 
 ## Installation
 
-Copy the skill into your Hermes skills directory:
+Copier le skill dans le répertoire des skills Hermes :
 
 ```bash
 tar -xzf swiss-job-intel-v1.tar.gz -C ~/.hermes/skills/swiss-job-intel/
 ```
 
-Then invoke the skill from your Hermes agent session.
+Puis invoquer le skill depuis une session agent Hermes.
 
 ---
 
-## What SKILL.md defines
+## Ce que définit SKILL.md
 
-`SKILL.md` is the agent instruction set. It specifies:
+`SKILL.md` est le jeu d'instructions de l'agent. Il spécifie :
 
-- **Phase 0** — state detection: `done.flag` present → skip to results; `profile_cache.json` present → skip to pipeline; nothing → onboard candidate
-- **Phase 1** — reading `cv.md`, `bilan.md`, optional portfolio URL
-- **Phase 2** — candidate profiling: strategic synthesis + `profile{}` dict + ESCO enrichment
-- **Phase 3** — pipeline launch via `orchestrate.py` (autonomous, 0 tokens)
-- **Phase 5** — results presentation from `summary.json`
+- **Phase 0** — détection d'état : `done.flag` présent → aller aux résultats ; `profile_cache.json` présent → lancer le pipeline ; rien → onboarder le candidat
+- **Phase 1** — lecture de `cv.md`, `bilan.md`, URL portfolio optionnelle
+- **Phase 2** — profilage candidat : synthèse stratégique + dict `profile{}` + enrichissement ESCO
+- **Phase 3** — lancement du pipeline via `orchestrate.py` (autonome, 0 token)
+- **Phase 5** — présentation des résultats depuis `summary.json`
 
-The agent **never reads raw job data** (`jobs_raw.json`, full CSV). Only `summary.json` (~200 tokens) reaches the conversation.
+L'agent **ne lit jamais les données brutes** (`jobs_raw.json`, CSV complet). Seul `summary.json` (~200 tokens) atteint la conversation.
 
 ---
 
-## Python pipeline (autonomous backend)
+## Pipeline Python (backend autonome)
 
 ### Scripts
 
-| Script | Role |
+| Script | Rôle |
 |--------|------|
-| `orchestrate.py` | Entry point — runs the full pipeline end to end |
-| `enrich_profile_esco.py` | Expands candidate terms via ESCO/ISCO taxonomy |
-| `scrape_ch_jobs.py` | Scrapes all active Swiss sources |
-| `score_export.py` | Scores offers + exports CSV / Markdown / JSON |
-| `manual_search_plan.py` | Generates a manual search plan when automatic results are insufficient |
-| `build_taxonomy_db.py` | One-time compilation of `source/taxonomy_db.json` from raw ESCO CSVs |
+| `orchestrate.py` | Point d'entrée — exécute le pipeline complet de bout en bout |
+| `enrich_profile_esco.py` | Étend les termes candidat via la taxonomie ESCO/ISCO |
+| `scrape_ch_jobs.py` | Scrape toutes les sources suisses actives |
+| `score_export.py` | Score les offres + exporte CSV / Markdown / JSON |
+| `manual_search_plan.py` | Génère un plan de recherche manuelle si les résultats automatiques sont insuffisants |
+| `build_taxonomy_db.py` | Compilation unique de `source/taxonomy_db.json` depuis les CSV ESCO bruts |
 
-### Running manually (outside Hermes)
+### Exécution manuelle (hors Hermes)
 
 ```bash
-# Full pipeline
+# Pipeline complet
 python3 scripts/orchestrate.py profile_cache.json --out results/
 
-# Force re-scrape (same profile)
+# Forcer un nouveau scraping (même profil)
 python3 scripts/orchestrate.py profile_cache.json --force-refresh
 
-# Regenerate profile (CV changed)
+# Régénérer le profil (CV modifié)
 python3 scripts/orchestrate.py profile_cache.json --force-profile
 ```
 
-> **WSL note:** always run via a native terminal. Code execution sandboxes (Jupyter kernels, some IDE runners) block outbound network on WSL.
+> **Note WSL :** toujours exécuter via un terminal natif. Les sandboxes d'exécution de code (kernels Jupyter, certains IDE) bloquent le réseau sortant sous WSL.
 
 ---
 
-## Data sources
+## Sources de données
 
-### Active sources (as of May 2026)
+### Sources actives (mai 2026)
 
-| Source | Connector | Notes |
+| Source | Connecteur | Notes |
 |--------|-----------|-------|
-| [Jobup.ch](https://www.jobup.ch) | `html_jsonld` | Listing → UUID → JSON-LD detail |
-| [Jobs.ch](https://www.jobs.ch) | `html_jsonld` | DE endpoint → UUID → JSON-LD detail |
-| [SuisseTalent.ch](https://www.suissetalent.ch) | `html_jsonld_inline` | JSON-LD inline in listing |
-| [Swisscom](https://careers.swisscom.ch) | `workday_api` | Workday JSON API |
-| [ANSAM](https://www.ansam.ch) | `teamtailor_jsonld` | JSON-LD per job page |
-| [Admin fédérale (OHWS)](https://www.stelle.admin.ch) | `json_api` | Intermittently empty |
-| [CIGES](https://www.ciges.net) | `wordpress_jsonld` | Low volume |
+| [Jobup.ch](https://www.jobup.ch) | `html_jsonld` | Listing → UUID → détail JSON-LD |
+| [Jobs.ch](https://www.jobs.ch) | `html_jsonld` | Endpoint DE → UUID → détail JSON-LD |
+| [SuisseTalent.ch](https://www.suissetalent.ch) | `html_jsonld_inline` | JSON-LD inline dans le listing |
+| [Admin fédérale (OHWS)](https://www.stelle.admin.ch) | `json_api` | Intermittent |
 
-> Source selection is purely technical — the candidate's domain never filters sources. An IT school may post janitorial positions; a hospital recruits engineers. Offer-level scoring handles relevance.
-
-### Inaccessible sources
-
-| Source | Status | Reason |
-|--------|--------|--------|
-| Hôpital du Valais | `js_dynamic` | ServiceNow — client-side rendering |
-| État du Valais | `js_dynamic` | Liferay + React |
-| État de Vaud | `js_dynamic` | JS-rendered, WSL connection refused |
-| HES-SO | `js_dynamic` | 403 on career page |
-| EPFL | `js_dynamic` | WordPress JS — HTML shell only |
-| Romandie.com | `tls_error` | TLS SNI rejection |
-| CHUV | `blocked_cloudflare` | Cloudflare Turnstile |
-| Jobup / Jobs.ch SPA | `spa_no_api` | React/Next.js SPA, no public API |
+> La sélection des sources est purement technique — le domaine candidat ne filtre jamais les sources. Une école technique peut publier des postes RH ; un hôpital recrute des ingénieurs. La pertinence est gérée au niveau du scoring individuel de chaque offre.
 
 ---
 
-## Scraping limitations
+## Limites du scraping
 
-**JavaScript-rendered pages:** Most Swiss institutional career pages (cantonal governments, hospitals, universities) use client-side JS frameworks. Standard HTTP scraping returns an empty shell. Headless browser support (Playwright/Selenium) is not yet implemented.
+**Pages rendues par JavaScript :** La plupart des pages carrières institutionnelles suisses (gouvernements cantonaux, hôpitaux, universités) utilisent des frameworks JS côté client. Le scraping HTTP standard retourne une coquille vide. Le support navigateur headless (Playwright/Selenium) n'est pas encore implémenté.
 
-**Cloudflare / bot protection:** Sites with active bot protection are skipped automatically.
+**Protection Cloudflare / anti-bot :** Les sites avec protection active sont ignorés automatiquement.
 
-**TLS errors:** Some subdomains lack valid SSL certificates. Python's `urllib` fails the handshake; no workaround without a proxy.
+**Erreurs TLS :** Certains sous-domaines ne disposent pas de certificats SSL valides. `urllib` de Python échoue lors de la négociation TLS ; aucun contournement sans proxy.
 
-**Volume:** A full run collects 150–220 unique offers across 7 sources. Niche profiles (archiving, library science, specialized trades) may return fewer than 15 relevant offers automatically. A manual search plan is generated when results fall below threshold.
-
-**Sequential scraping:** Sources run sequentially. A full run with 175 enriched terms takes approximately 4–5 minutes.
+**Volume :** Les profils de niche (archivistique, bibliothéconomie, métiers spécialisés) peuvent retourner moins de 15 offres pertinentes automatiquement. Un plan de recherche manuelle est généré si les résultats sont en dessous du seuil.
 
 ---
 
 ## Scoring
 
-Each offer is scored against the candidate profile — no hardcoded keywords.
+Chaque offre est scorée par rapport au profil candidat — aucun mot-clé hardcodé.
 
-| Signal | Title | Snippet |
+| Signal | Titre | Snippet |
 |--------|-------|---------|
-| Recommended title (exact) | +6 | — |
-| Target role | +4 | — |
-| Primary terms | +5 | +2 |
+| Titre recommandé (exact) | +6 | — |
+| Rôle cible | +4 | — |
+| Termes primaires | +5 | +2 |
 | Hard skills | +3 | +2 |
-| Specific soft skills (cap +3) | +1 | — |
-| Preferred location | +3 | — |
-| Recency (≤7d / ≤14d / ≤30d) | +3 / +2 / +1 | — |
-| Exclude term in title | −8 | — |
-| No primary term anywhere | −5 | — |
+| Soft skills spécifiques (cap +3) | +1 | — |
+| Localisation préférée | +3 | — |
+| Récence (≤7j / ≤14j / ≤30j) | +3 / +2 / +1 | — |
+| Terme exclu dans le titre | −8 | — |
+| Aucun terme primaire nulle part | −5 | — |
 
-Generic soft skills (autonomie, rigueur, esprit d'équipe…) are ignored to prevent boilerplate false positives.
+Les soft skills génériques (autonomie, rigueur, esprit d'équipe…) sont ignorées pour éviter les faux positifs boilerplate.
 
-**Tiers:** A ≥ 20 · B 12–19 · C 6–11 · rejected < 6
-
----
-
-## ESCO / ISCO enrichment
-
-Candidate terms are expanded from ~16 to ~175 using:
-
-- **[ESCO v1.2.1](https://esco.ec.europa.eu/fr/use-esco/download)** (European Commission, CC BY 4.0) — 36,000+ Swiss job titles and occupational synonyms
-- **[CH-ISCO-19](https://www.bfs.admin.ch/bfs/en/home.assetdetail.23530849.html)** (OFS/BFS) — Swiss occupational classification
-
-The compiled database (`source/taxonomy_db.json`) covers 484 ISCO groups and 12,000+ synonyms, built once from raw CSVs via `scripts/build_taxonomy_db.py`.
+**Tiers :** A ≥ 20 · B 12–19 · C 6–11 · rejeté < 6
 
 ---
 
-## Output files
+## Enrichissement ESCO / ISCO
 
-| File | Description |
-|------|-------------|
-| `results/DD-MM-YYYY_output.csv` | Full ranked list — UTF-8 BOM, Excel-compatible |
-| `results/DD-MM-YYYY_output.md` | Human-readable Markdown report (Tier A/B/C) |
-| `results/DD-MM-YYYY_summary.json` | Compact JSON for agent Phase 5 (~200 tokens) |
-| `results/done.flag` | Pipeline completion sentinel (read by Hermes Phase 0) |
+Les termes candidat sont étendus de ~16 à ~175 grâce à :
 
-CSV columns: `date_export · tier · score · titre · employeur · localisation · source · url · date_offre · mots_cles_matches · gaps`
+- **[ESCO v1.2.1](https://esco.ec.europa.eu/fr/use-esco/download)** (Commission européenne, CC BY 4.0) — plus de 36 000 intitulés de postes suisses et synonymes professionnels
+- **[CH-ISCO-19](https://www.bfs.admin.ch/bfs/en/home.assetdetail.23530849.html)** (OFS/BFS) — classification professionnelle suisse
+
+La base de données compilée (`source/taxonomy_db.json`) couvre 484 groupes ISCO et plus de 12 000 synonymes, construite une seule fois depuis les CSV bruts via `scripts/build_taxonomy_db.py`.
+
+---
+
+## Fichiers de sortie
+
+| Fichier | Description |
+|---------|-------------|
+| `results/JJ-MM-AAAA_output.csv` | Liste classée complète — UTF-8 BOM, compatible Excel |
+| `results/JJ-MM-AAAA_output.md` | Rapport Markdown lisible (Tier A/B/C) |
+| `results/JJ-MM-AAAA_summary.json` | JSON compact pour la Phase 5 agent (~200 tokens) |
+| `results/done.flag` | Sentinelle de fin de pipeline (lue par la Phase 0 Hermes) |
+
+Colonnes CSV : `date_export · tier · score · titre · employeur · localisation · source · url · date_offre · mots_cles_matches · gaps`
 
 ---
 
@@ -199,38 +181,36 @@ python3 tests/test_pipeline.py
 # 121 ✅  0 ❌  (121 tests)
 ```
 
-Covers ESCO enrichment, scoring, source registry, URL extraction variants, multi-profile false positive detection, recency (Workday + ISO 8601), pipeline contract, and manual search plan logic.
+Couvre l'enrichissement ESCO, le scoring, le registre des sources, les variantes d'extraction d'URL, la détection de faux positifs multi-profils, la récence (Workday + ISO 8601), le contrat pipeline et la logique du plan de recherche manuelle.
 
 ---
 
-## Known gaps
+## Lacunes connues
 
-| Gap | Path forward |
-|-----|-------------|
-| No headless browser | Playwright connector for js_dynamic sources |
-| Sequential scraping | asyncio / threading |
-| Single Workday tenant (Swisscom) | One connector per tenant |
-| French-language bias in scoring | Language-aware normalization |
-| No scheduling | Cron / GitHub Actions integration |
+| Lacune | Piste d'amélioration |
+|--------|---------------------|
+| Pas de navigateur headless | Connecteur Playwright pour les sources `js_dynamic` |
+| Biais langue française dans le scoring | Normalisation multilingue |
+| Pas de planification | Intégration Cron / GitHub Actions |
 
 ---
 
-## Legal notice
+## Avis légal
 
-Read-only HTTP requests to publicly accessible job listing pages. Does not bypass authentication or bot protection. Cloudflare-protected sites are skipped automatically. Review each platform's Terms of Service before use in a commercial context.
+Requêtes HTTP en lecture seule vers des pages d'offres d'emploi accessibles publiquement. Ne contourne aucune authentification ni protection anti-bot. Les sites protégés par Cloudflare sont ignorés automatiquement. Consulter les Conditions d'utilisation de chaque plateforme avant tout usage commercial.
 
 ---
 
-## Credits
+## Crédits
 
-- [ESCO v1.2.1](https://esco.ec.europa.eu/fr/use-esco/download) — European Commission (CC BY 4.0)
+- [ESCO v1.2.1](https://esco.ec.europa.eu/fr/use-esco/download) — Commission européenne (CC BY 4.0)
 - [CH-ISCO-19](https://www.bfs.admin.ch/bfs/en/home.assetdetail.23530849.html) — OFS/BFS
-- Job data fetched in real time from Jobup.ch, Jobs.ch, SuisseTalent.ch, Swisscom, ANSAM, CIGES, stelle.admin.ch
+- Données d'offres collectées en temps réel depuis Jobup.ch, Jobs.ch, SuisseTalent.ch, stelle.admin.ch
 
 ---
 
-## License
+## Licence
 
-MIT — see [LICENSE](LICENSE).
+MIT — voir [LICENSE](LICENSE).
 
-`source/taxonomy_db.json` is derived from ESCO v1.2.1 (CC BY 4.0) and CH-ISCO-19 (OFS/BFS). Attribution required for redistribution.
+`source/taxonomy_db.json` est dérivé d'ESCO v1.2.1 (CC BY 4.0) et CH-ISCO-19 (OFS/BFS). Attribution requise pour toute redistribution.

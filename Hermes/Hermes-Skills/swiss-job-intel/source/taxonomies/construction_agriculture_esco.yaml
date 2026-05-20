@@ -1,0 +1,338 @@
+version: 1
+language: fr
+source: ESCO v1.2.1 + CH-ISCO-19 BFS
+description: >
+  Taxonomie construction/bâtiment/génie civil et agriculture/viticulture
+  pour le marché suisse.
+
+occupations:
+  # ── CONSTRUCTION / BÂTIMENT ───────────────────────────────────────────────
+  - isco_code: "2141"
+    isco_label_fr: "Ingénieurs en génie industriel et en production"
+    ch_isco_label_fr: "Ingénieur civil"
+    plan: A
+    synonyms:
+      - ingénieur civil
+      - ingénieur structure
+      - ingénieur bâtiment
+      - ingénieur génie civil
+      - Bauingenieur
+    related_terms:
+      - calcul de structure
+      - béton armé
+      - maîtrise d'œuvre
+      - géotechnique
+      - ouvrages d'art
+
+  - isco_code: "3112"
+    isco_label_fr: "Techniciens du bâtiment et du génie civil"
+    ch_isco_label_fr: "Technicien bâtiment"
+    plan: A
+    synonyms:
+      - technicien bâtiment
+      - technicien travaux
+      - conducteur de travaux
+      - chef de chantier
+      - Bautechniker
+      - responsable de chantier
+    related_terms:
+      - gestion de chantier
+      - suivi travaux
+      - AMSEC
+      - cahier des charges
+      - devis
+      - réception travaux
+
+  - isco_code: "7111"
+    isco_label_fr: "Maçons et poseurs de pierres"
+    ch_isco_label_fr: "Maçon"
+    plan: A
+    synonyms:
+      - maçon
+      - maçon-coffreur
+      - poseur de pierres
+      - tailleur de pierres
+      - Maurer
+    related_terms:
+      - gros œuvre
+      - béton
+      - coffrage
+      - ferraillage
+      - construction murs
+
+  - isco_code: "7112"
+    isco_label_fr: "Ouvriers du bâtiment (gros œuvre)"
+    ch_isco_label_fr: "Ouvrier bâtiment"
+    plan: A
+    synonyms:
+      - ouvrier bâtiment
+      - manœuvre bâtiment
+      - Bauarbeiter
+      - ouvrier génie civil
+    related_terms:
+      - chantier
+      - travaux extérieurs
+      - démolition
+      - terrassement
+
+  - isco_code: "7121"
+    isco_label_fr: "Couvreurs"
+    ch_isco_label_fr: "Couvreur"
+    plan: A
+    synonyms:
+      - couvreur
+      - poseur de toiture
+      - Dachdecker
+    related_terms:
+      - toiture
+      - isolation toiture
+      - charpente
+      - tuiles
+      - membranes
+
+  - isco_code: "7122"
+    isco_label_fr: "Parqueteurs et poseurs de revêtements de sol"
+    ch_isco_label_fr: "Carreleur / Poseur revêtements"
+    plan: A
+    synonyms:
+      - carreleur
+      - poseur de carrelage
+      - poseur de revêtements de sol
+      - parqueteur
+      - Plattenleger
+    related_terms:
+      - revêtements sol
+      - carrelage
+      - parquet
+      - chapes
+
+  - isco_code: "7126"
+    isco_label_fr: "Plombiers et poseurs d'installations sanitaires"
+    ch_isco_label_fr: "Sanitaire"
+    plan: A
+    synonyms:
+      - plombier
+      - sanitaire
+      - installateur sanitaire
+      - Sanitärinstallateur
+      - plombier-chauffagiste
+    related_terms:
+      - installations sanitaires
+      - plomberie
+      - chauffage
+      - ventilation
+      - climatisation
+
+  - isco_code: "7411"
+    isco_label_fr: "Électriciens du bâtiment"
+    ch_isco_label_fr: "Électricien de montage"
+    plan: A
+    synonyms:
+      - électricien
+      - électricien de montage
+      - électricien bâtiment
+      - Elektriker
+      - électricien industriel
+    related_terms:
+      - installations électriques
+      - tableaux électriques
+      - câblage
+      - domotique
+      - habilitation électrique
+
+  - isco_code: "7131"
+    isco_label_fr: "Peintres en bâtiment"
+    ch_isco_label_fr: "Peintre en bâtiment"
+    plan: A
+    synonyms:
+      - peintre en bâtiment
+      - peintre décorateur
+      - Maler
+      - tapissier
+    related_terms:
+      - peinture intérieure
+      - peinture extérieure
+      - enduits
+      - décoration intérieure
+
+  # ── AGRICULTURE / VITICULTURE ─────────────────────────────────────────────
+  - isco_code: "6111"
+    isco_label_fr: "Agriculteurs et ouvriers agricoles qualifiés"
+    ch_isco_label_fr: "Agriculteur"
+    plan: A
+    synonyms:
+      - agriculteur
+      - exploitant agricole
+      - paysan
+      - Landwirt
+      - ouvrier agricole qualifié
+    related_terms:
+      - exploitation agricole
+      - grandes cultures
+      - élevage
+      - machinisme agricole
+      - PAC
+      - gestion de l'exploitation
+
+  - isco_code: "6112"
+    isco_label_fr: "Arboriculteurs et viticulteurs"
+    ch_isco_label_fr: "Viticulteur / Arboriculteur"
+    plan: A
+    synonyms:
+      - viticulteur
+      - arboriculteur
+      - vigneron
+      - Winzer
+      - ouvrier viticole
+      - ouvrier arboricole
+      - maître vigneron
+    related_terms:
+      - viticulture
+      - arboriculture
+      - taille de vigne
+      - vendanges
+      - cave
+      - vinification
+      - oenologie
+      - AOC
+
+  - isco_code: "6113"
+    isco_label_fr: "Maraîchers et horticulteurs"
+    ch_isco_label_fr: "Horticulteur"
+    plan: A
+    synonyms:
+      - maraîcher
+      - horticulteur
+      - jardinier maraîcher
+      - Gemüsegärtner
+      - fleuriste-horticulteur
+    related_terms:
+      - maraîchage
+      - horticulture
+      - serre
+      - cultures légumières
+      - production florale
+
+  - isco_code: "6121"
+    isco_label_fr: "Éleveurs et ouvriers de l'élevage"
+    ch_isco_label_fr: "Agropraticien élevage"
+    plan: A
+    synonyms:
+      - éleveur
+      - ouvrier d'élevage
+      - berger
+      - Tierpfleger
+      - vacher
+    related_terms:
+      - élevage bovin
+      - élevage porcin
+      - aviculture
+      - soins aux animaux
+      - traite
+
+  - isco_code: "6130"
+    isco_label_fr: "Agriculteurs et ouvriers agricoles"
+    ch_isco_label_fr: "Technicien agricole"
+    plan: A
+    synonyms:
+      - technicien agricole
+      - conseiller agricole
+      - agronome
+      - ingénieur agronome
+      - conseiller en productions végétales
+      - conseiller en productions animales
+    related_terms:
+      - agronomie
+      - conseil agricole
+      - vulgarisation agricole
+      - diagnostic agronomique
+      - agriculture de précision
+      - durabilité agricole
+
+  - isco_code: "6210"
+    isco_label_fr: "Forestiers et bûcherons"
+    ch_isco_label_fr: "Forestier-bûcheron"
+    plan: A
+    synonyms:
+      - forestier
+      - bûcheron
+      - garde forestier
+      - Forstwart
+      - sylviculteur
+    related_terms:
+      - sylviculture
+      - exploitation forestière
+      - gestion forêt
+      - abattage
+      - reboisement
+
+skills:
+  - key: gestion_chantier
+    labels:
+      - gestion de chantier
+      - conduite de travaux
+      - chef de chantier
+    isco_codes: ["3112", "2141"]
+    synonyms:
+      - suivi de chantier
+      - planification travaux
+      - coordination chantier
+      - réunion de chantier
+      - PV de chantier
+      - avancement travaux
+
+  - key: plans_techniques
+    labels:
+      - lecture de plans
+      - plans techniques
+      - dessin technique
+    isco_codes: ["3112", "7111", "7121"]
+    synonyms:
+      - lecture de plans d'exécution
+      - plans d'architecte
+      - plans d'ingénieur
+      - CAO
+      - AutoCAD
+      - implantation
+
+  - key: viticulture_pratique
+    labels:
+      - viticulture
+      - travaux viticoles
+      - vigne
+    isco_codes: ["6112"]
+    synonyms:
+      - taille de la vigne
+      - travaux en vert
+      - rognage
+      - épamprage
+      - vendanges
+      - cave viticole
+      - assemblage
+
+  - key: agriculture_biologique
+    labels:
+      - agriculture biologique
+      - bio
+      - culture biologique
+    isco_codes: ["6111", "6112", "6113"]
+    synonyms:
+      - agriculture durable
+      - production biologique
+      - certification bio
+      - IP-SUISSE
+      - permaculture
+      - agroécologie
+
+  - key: installations_sanitaires
+    labels:
+      - installations sanitaires
+      - plomberie
+      - sanitaire
+    isco_codes: ["7126"]
+    synonyms:
+      - travaux sanitaires
+      - installations eau chaude
+      - chauffage au sol
+      - robinetterie
+      - SIA 385

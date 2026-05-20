@@ -1,0 +1,315 @@
+version: 1
+language: fr
+source: ESCO v1.2.1 + CH-ISCO-19 BFS
+description: >
+  Taxonomie travail social, éducatif, formation professionnelle et insertion.
+  Couvre : éducateurs, assistants sociaux, animateurs, formateurs d'adultes,
+  conseillers en emploi, coordinateurs sociaux.
+
+occupations:
+  - isco_code: "2263"
+    isco_label_fr: "Travailleurs sociaux"
+    ch_isco_label_fr: "Assistant social / Travailleur social"
+    plan: A
+    synonyms:
+      - assistant social
+      - assistante sociale
+      - travailleur social
+      - travailleuse sociale
+      - curateur
+      - curatrice
+      - conseiller social
+      - case manager social
+      - Sozialarbeiter
+    related_terms:
+      - protection de l'enfance
+      - aide sociale
+      - curatelle
+      - action sociale
+      - travail social communautaire
+      - intervention sociale
+
+  - isco_code: "2320"
+    isco_label_fr: "Enseignants du secondaire"
+    ch_isco_label_fr: "Enseignant degré secondaire"
+    plan: A
+    synonyms:
+      - enseignant secondaire
+      - professeur secondaire
+      - maître d'école
+      - professeur au gymnase
+      - enseignant professionnel
+    related_terms:
+      - pédagogie
+      - didactique
+      - classe
+      - élèves
+      - programme scolaire
+
+  - isco_code: "2330"
+    isco_label_fr: "Enseignants du primaire"
+    ch_isco_label_fr: "Enseignant degré primaire"
+    plan: A
+    synonyms:
+      - enseignant primaire
+      - instituteur
+      - maître primaire
+      - enseignant enfantine
+      - enseignant école primaire
+    related_terms:
+      - pédagogie primaire
+      - enfants
+      - école primaire
+      - cycle
+
+  - isco_code: "2351"
+    isco_label_fr: "Spécialistes de la pédagogie spécialisée"
+    ch_isco_label_fr: "Enseignant spécialisé"
+    plan: A
+    synonyms:
+      - enseignant spécialisé
+      - pédagogue spécialisé
+      - enseignant appui
+      - maître d'appui
+      - enseignant élèves besoins particuliers
+      - spécialiste intégration scolaire
+    related_terms:
+      - pédagogie curative
+      - troubles apprentissage
+      - dys
+      - autisme
+      - TDAH
+      - intégration scolaire
+
+  - isco_code: "2352"
+    isco_label_fr: "Orthophonistes et logopédistes"
+    ch_isco_label_fr: "Logopédiste"
+    plan: A
+    synonyms:
+      - logopédiste
+      - orthophoniste
+      - spécialiste langage
+    related_terms:
+      - troubles du langage
+      - dyslexie
+      - dysphasie
+      - rééducation langage
+      - bégaiement
+
+  - isco_code: "2359"
+    isco_label_fr: "Enseignants et formateurs non classés ailleurs"
+    ch_isco_label_fr: "Formateur d'adultes"
+    plan: B
+    synonyms:
+      - formateur adultes
+      - formateur d'adultes
+      - formateur professionnel
+      - formateur outils numériques
+      - formateur numérique
+      - coach opérationnel
+      - référent formation
+      - animateur de formation
+      - quality coach
+      - formateur en entreprise
+      - responsable formation
+    related_terms:
+      - andragogie
+      - formation continue
+      - atelier
+      - pédagogie adultes
+      - blended learning
+      - e-learning
+      - formation professionnelle
+
+  - isco_code: "3411"
+    isco_label_fr: "Travailleurs sociaux des services à la communauté"
+    ch_isco_label_fr: "Animateur socioculturel"
+    plan: A
+    synonyms:
+      - animateur socioculturel
+      - animatrice socioculturelle
+      - animateur communautaire
+      - médiateur culturel
+      - agent de développement communautaire
+    related_terms:
+      - animation socioculturelle
+      - projets communautaires
+      - lien social
+      - quartier
+      - prévention
+
+  - isco_code: "3412"
+    isco_label_fr: "Travailleurs sociaux scolaires"
+    ch_isco_label_fr: "Éducateur scolaire"
+    plan: A
+    synonyms:
+      - éducateur scolaire
+      - travailleur social en milieu scolaire
+      - médiateur scolaire
+      - conseiller scolaire
+    related_terms:
+      - médiation scolaire
+      - décrochage scolaire
+      - suivi élèves
+      - orientation scolaire
+
+  - isco_code: "3423"
+    isco_label_fr: "Agents de l'emploi"
+    ch_isco_label_fr: "Conseiller en insertion professionnelle"
+    plan: B
+    synonyms:
+      - conseiller en emploi
+      - conseiller insertion professionnelle
+      - coach emploi
+      - accompagnateur socioprofessionnel
+      - référent emploi
+      - conseiller employabilité
+      - chargé d'insertion
+      - accompagnateur emploi
+      - conseiller ORP
+    related_terms:
+      - insertion professionnelle
+      - retour à l'emploi
+      - employabilité
+      - bilan de compétences
+      - accompagnement individuel
+      - remobilisation
+      - ORP
+      - LACI
+
+  - isco_code: "5311"
+    isco_label_fr: "Gardes d'enfants"
+    ch_isco_label_fr: "Auxiliaire de l'enfance"
+    plan: A
+    synonyms:
+      - auxiliaire de l'enfance
+      - assistante maternelle
+      - garde d'enfants
+      - nourrice
+      - baby-sitter professionnel
+    related_terms:
+      - petite enfance
+      - crèche
+      - garderie
+      - éveil
+      - développement enfant
+
+  - isco_code: "5312"
+    isco_label_fr: "Assistants d'enseignement"
+    ch_isco_label_fr: "Aide à l'enseignement"
+    plan: A
+    synonyms:
+      - aide à l'enseignement
+      - assistant pédagogique
+      - auxiliaire d'intégration
+      - assistant élèves
+      - accompagnant élèves handicapés
+      - AESH
+    related_terms:
+      - soutien scolaire
+      - accompagnement élèves
+      - intégration
+      - inclusion scolaire
+
+  - isco_code: "2635"
+    isco_label_fr: "Psychologues"
+    ch_isco_label_fr: "Psychologue"
+    plan: A
+    synonyms:
+      - psychologue clinicien
+      - psychologue scolaire
+      - psychologue du travail
+      - psychothérapeute
+      - psychologue FSP
+    related_terms:
+      - bilan psychologique
+      - suivi thérapeutique
+      - psychothérapie
+      - évaluation neuropsychologique
+      - counselling
+
+  - isco_code: "2634"
+    isco_label_fr: "Éducateurs spécialisés"
+    ch_isco_label_fr: "Éducateur social"
+    plan: A
+    synonyms:
+      - éducateur social
+      - éducatrice sociale
+      - éducateur spécialisé
+      - éducatrice spécialisée
+      - référent éducatif
+      - éducateur en foyer
+      - maître socioprofessionnel
+    related_terms:
+      - foyer éducatif
+      - internat
+      - protection de l'enfance
+      - insertion socioprofessionnelle
+      - accompagnement individuel
+      - MSP
+
+skills:
+  - key: accompagnement_individuel
+    labels:
+      - accompagnement individuel
+      - suivi individuel
+      - coaching individuel
+    isco_codes: ["2263", "3423", "2634"]
+    synonyms:
+      - suivi personnalisé
+      - entretien individuel
+      - accompagnement personnalisé
+      - prise en charge individuelle
+
+  - key: insertion_professionnelle
+    labels:
+      - insertion professionnelle
+      - réinsertion
+      - retour à l'emploi
+    isco_codes: ["3423", "2263"]
+    synonyms:
+      - insertion sociale et professionnelle
+      - accompagnement vers l'emploi
+      - remobilisation professionnelle
+      - employabilité
+      - activation professionnelle
+      - job coaching
+
+  - key: formation_adultes
+    labels:
+      - formation adultes
+      - andragogie
+      - formation professionnelle
+    isco_codes: ["2359", "3423"]
+    synonyms:
+      - formation continue
+      - formation des adultes
+      - atelier de formation
+      - cours professionnels
+      - formation qualifiante
+      - formation CFC adultes
+
+  - key: travail_social
+    labels:
+      - travail social
+      - action sociale
+      - aide sociale
+    isco_codes: ["2263", "3411"]
+    synonyms:
+      - intervention sociale
+      - accompagnement social
+      - coordination sociale
+      - suivi social
+      - rapport social
+
+  - key: animation_socioculturelle
+    labels:
+      - animation socioculturelle
+      - animation communautaire
+    isco_codes: ["3411"]
+    synonyms:
+      - animation de groupe
+      - activités socioculturelles
+      - projets collectifs
+      - vie de quartier
+      - prévention communautaire

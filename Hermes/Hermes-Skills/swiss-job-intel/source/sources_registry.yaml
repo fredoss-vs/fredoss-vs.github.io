@@ -1,0 +1,219 @@
+version: 3
+updated: "2026-05-15"
+description: >
+  Registre des sources de scraping pour le marché suisse.
+  La sélection dans orchestrate.py est uniquement technique : une source est incluse
+  si son statut n'est pas dans INACTIVE_STATUSES (needs_connector, blocked_cloudflare,
+  spa_no_api, spa_manual). La pertinence métier est décidée au scoring de chaque offre.
+
+# PRINCIPE FONDAMENTAL :
+#   L'employeur ne définit pas le métier publié.
+#   CIGES (école IT) peut publier un poste de concierge.
+#   L'Hôpital du Valais publie des postes IT, RH, cuisine, logistique.
+#   Swisscom publie IT, RH, finance, admin, facilities.
+#   La collecte est large ; le tri est précis — au niveau de l'offre, pas de la source.
+#
+# preferred_domains = annotation documentaire uniquement (niveau de bruit estimé).
+#                     N'est PAS utilisé pour filtrer dans orchestrate.py.
+#
+# Types (informatifs, non fonctionnels pour la sélection) :
+#   multi_domain  → publie explicitement plusieurs familles de postes
+#   generalist    → agence d'emploi ou job board tous secteurs
+#   specialized   → image sectorielle forte, mais peut publier hors domaine
+#
+# Seul critère de sélection : status NOT IN {needs_connector, blocked_cloudflare,
+#                                             spa_no_api, spa_manual}
+
+sources:
+  admin_federal:
+    id: admin_federal
+    label: "Administration fédérale (OHWS)"
+    type: multi_domain
+    connector: json_api
+    url: "https://ohws.prospective.ch/public/v1/medium/1000625"
+    params: {lang: fr, limit: 80}
+    status: active_sparse
+    notes: "Souvent vide. Universel tous domaines. Skip sans bloquer si vide."
+
+  swisscom_workday:
+    id: swisscom_workday
+    label: "Swisscom (Workday)"
+    type: multi_domain
+    connector: workday_api
+    url: "https://swisscom.wd103.myworkdayjobs.com/wday/cxs/swisscom/SwisscomExternalCareers/jobs"
+    enrich_base: "https://swisscom.wd103.myworkdayjobs.com/SwisscomExternalCareers"
+    status: active
+    preferred_domains: [it, services_numeriques]
+    notes: >
+      20 000+ employés — publie IT, RH, finance, logistique, admin, facilities.
+      preferred_domains = hint de pertinence, pas d'exclusion.
+      Résultats filtrés au scoring selon primary_terms candidat.
+
+  ansam:
+    id: ansam
+    label: "ANSAM (Teamtailor)"
+    type: generalist
+    connector: teamtailor_jsonld
+    listing_url: "https://carrieres.ansam.ch/jobs"
+    status: active
+    notes: "Agence d'insertion professionnelle — tous domaines et niveaux de qualification."
+
+  ciges:
+    id: ciges
+    label: "CIGES"
+    type: specialized
+    connector: wordpress_jsonld
+    listing_url: "https://www.ciges.ch/carriere/"
+    url_pattern: "https://www.ciges.ch/job/"
+    status: active_sparse
+    preferred_domains: [it, formation, services_numeriques]
+    notes: "Centre de formation IT. Peu d'offres. Ne pas bloquer si vide."
+
+  hopital_valais:
+    id: hopital_valais
+    label: "Hôpital du Valais (HVS)"
+    type: multi_domain
+    connector: servicenow
+    url: "https://www.hopitalvs.ch/travailler-chez-nous/offres-demploi"
+    status: js_dynamic
+    preferred_domains: [sante, soins, medecine]
+    notes: >
+      Publie médical, soins, admin, logistique, cuisine, nettoyage, RH, finance.
+      Portail ServiceNow — données chargées côté client uniquement, inaccessible statiquement.
+      Vérifié mai 2026.
+
+  chuv:
+    id: chuv
+    label: "CHUV"
+    type: multi_domain
+    connector: html_cloudflare
+    url: "https://www.chuv.ch/fr/carriere/accueil"
+    status: blocked_cloudflare
+    preferred_domains: [sante, medecine, recherche]
+    notes: "Cloudflare Turnstile. Inaccessible automatiquement."
+
+  epfl:
+    id: epfl
+    label: "EPFL"
+    type: specialized
+    connector: wordpress_spa
+    url: "https://www.epfl.ch/about/working/working-at-epfl/job-openings/"
+    status: js_dynamic
+    preferred_domains: [science, recherche, it, ingenierie]
+    notes: >
+      WordPress avec chargement dynamique des offres via JS.
+      Page HTML retourne uniquement le shell — aucune offre dans le HTML statique.
+      Vérifié mai 2026.
+
+  hesso:
+    id: hesso
+    label: "HES-SO"
+    type: multi_domain
+    connector: html_generic
+    url: "https://www.hes-so.ch/fr/emplois"
+    status: js_dynamic
+    preferred_domains: [science, formation, sante, social, it]
+    notes: >
+      Page /fr/emplois inaccessible (403/vide). Pas de section carrières publique identifiée.
+      Vérifié mai 2026.
+
+  etat_valais:
+    id: etat_valais
+    label: "État du Valais"
+    type: multi_domain
+    connector: liferay_spa
+    url: "https://www.vs.ch/web/srh/stellenborse"
+    search_url_template: "https://www.vs.ch/web/srh/stellenborse"
+    status: js_dynamic
+    notes: >
+      Portail RH cantonal — toutes fonctions.
+      Liferay CMS avec React — offres chargées dynamiquement, HTML statique vide.
+      APIs Liferay (/api/jsonws, /o/headless) retournent 404/403. Inaccessible automatiquement.
+      Vérifié mai 2026.
+
+  etat_vaud:
+    id: etat_vaud
+    label: "État de Vaud"
+    type: multi_domain
+    connector: html_generic
+    url: "https://www.vd.ch/themes/etat-droit-finances/ressources-humaines/emplois-a-letat-de-vaud/"
+    search_url_template: "https://www.vd.ch/themes/etat-droit-finances/ressources-humaines/emplois-a-letat-de-vaud/"
+    status: js_dynamic
+    notes: >
+      Portail RH cantonal vaudois — toutes fonctions.
+      Connexion refusée depuis WSL (mai 2026). Contenu minimal même avec connexion.
+      Probable chargement dynamique JS. À retester depuis réseau externe.
+
+  romandie:
+    id: romandie
+    label: "Romandie.com Emploi"
+    type: generalist
+    connector: html_generic
+    url: "https://emploi.romandie.com/offres-emploi/index/"
+    search_url_template: "https://emploi.romandie.com/offres-emploi/index/?q={query}"
+    status: tls_error
+    notes: >
+      Job board Suisse romande — forte couverture collectivités publiques.
+      Erreur TLS SNI : le serveur ne reconnaît pas emploi.romandie.com lors du handshake SSL.
+      Inaccessible depuis Python urllib et curl (même avec --insecure). Vérifié mai 2026.
+
+  jobup:
+    id: jobup
+    label: "Jobup.ch"
+    type: generalist
+    connector: html_jsonld
+    url: "https://www.jobup.ch/fr/emplois/"
+    search_url_template: "https://www.jobup.ch/fr/emplois/?term={query}"
+    status: active
+    notes: >
+      Job board romand généraliste. Listing HTML → URLs UUID → JSON-LD JobPosting sur page détail.
+      Utilise primary_terms du profil. Limit 60 URLs par session.
+
+  jobs_ch:
+    id: jobs_ch
+    label: "Jobs.ch"
+    type: generalist
+    connector: html_jsonld
+    url: "https://www.jobs.ch/de/stellenangebote/"
+    search_url_template: "https://www.jobs.ch/fr/emplois/?term={query}"
+    status: active
+    notes: >
+      Job board national. Endpoint allemand retourne HTML complet (fr retourne SPA vide).
+      Listing HTML → URLs UUID → JSON-LD JobPosting sur page détail.
+      Limit 60 URLs par session.
+
+  suissetalent:
+    id: suissetalent
+    label: "SuisseTalent.ch"
+    type: generalist
+    connector: html_jsonld_inline
+    url: "https://www.suissetalent.ch/emplois"
+    search_url_template: "https://www.suissetalent.ch/emplois?term={query}"
+    status: active
+    notes: >
+      Job board Suisse romande. JSON-LD JobPosting directement dans la page listing (20/page).
+      Pas de requête détail nécessaire.
+
+  jobup_manual:
+    id: jobup_manual
+    label: "Jobup.ch (SPA — manuel)"
+    type: generalist
+    connector: spa_manual
+    url: "https://www.jobup.ch/fr/emplois/"
+    search_url_template: "https://www.jobup.ch/fr/emplois/?term={query}"
+    status: spa_no_api
+    notes: "SPA React. Ouvrir manuellement. Filtres région et type contrat disponibles."
+
+  jobs_ch_manual:
+    id: jobs_ch_manual
+    label: "Jobs.ch (SPA — manuel)"
+    type: generalist
+    connector: spa_manual
+    url: "https://www.jobs.ch/fr/"
+    search_url_template: "https://www.jobs.ch/fr/emplois/?term={query}"
+    status: spa_no_api
+    notes: "SPA Next.js. Ouvrir manuellement. Filtrer par canton."
+
+# ── Statuts à ne pas tenter avant 3 mois (vides ou bloqués, mai 2026) ────────
+blocked_until_2026_08:
+  - SUVA, BCV, BCVs, HUG, CHUV, Groupe E, Sword, JobCourier, publicjobs.ch, OIKEN

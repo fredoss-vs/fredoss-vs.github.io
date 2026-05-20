@@ -1,0 +1,290 @@
+version: 1
+language: fr
+source: ESCO v1.2.1 + CH-ISCO-19 BFS
+description: >
+  Taxonomie santé/médecine/soins pour le marché suisse.
+  Couvre : médecins, infirmiers, techniciens médicaux, sages-femmes,
+  physiothérapeutes, ergothérapeutes, aides-soignants, assistants médicaux.
+
+occupations:
+  - isco_code: "2211"
+    isco_label_fr: "Médecins généralistes"
+    ch_isco_label_fr: "Médecin généraliste"
+    plan: A
+    synonyms:
+      - médecin de famille
+      - médecin praticien
+      - omnipraticien
+      - general practitioner
+      - Hausarzt
+    related_terms:
+      - cabinet médical
+      - consultation
+      - diagnostic
+      - prescription
+      - médecine de premier recours
+
+  - isco_code: "2212"
+    isco_label_fr: "Médecins spécialistes"
+    ch_isco_label_fr: "Médecin spécialiste"
+    plan: A
+    synonyms:
+      - médecin spécialiste
+      - spécialiste hospitalier
+      - chef de clinique
+      - médecin adjoint
+      - cardiologue
+      - urgentiste
+      - interniste
+      - pédiatre
+      - anesthésiste
+      - chirurgien
+    related_terms:
+      - hôpital
+      - clinique
+      - garde médicale
+      - bloc opératoire
+      - soins spécialisés
+
+  - isco_code: "2221"
+    isco_label_fr: "Infirmiers"
+    ch_isco_label_fr: "Infirmier diplômé / Infirmière diplômée"
+    plan: A
+    synonyms:
+      - infirmier diplômé
+      - infirmière diplômée
+      - infirmier HES
+      - infirmière HES
+      - infirmier en soins généraux
+      - nurse
+      - Pflegefachmann
+      - Pflegefachfrau
+      - infirmier ICUS
+      - infirmier anesthésiste
+      - infirmier urgences
+    related_terms:
+      - soins infirmiers
+      - soins intensifs
+      - ICUS
+      - USIN
+      - urgences
+      - bloc opératoire
+      - médecine interne
+      - chirurgie
+      - gériatrie
+      - pédiatrie
+      - oncologie
+
+  - isco_code: "2222"
+    isco_label_fr: "Sages-femmes"
+    ch_isco_label_fr: "Sage-femme"
+    plan: A
+    synonyms:
+      - sage-femme
+      - maïeuticienne
+      - Hebamme
+    related_terms:
+      - maternité
+      - obstétrique
+      - accouchement
+      - périnatalité
+      - néonatologie
+
+  - isco_code: "2264"
+    isco_label_fr: "Physiothérapeutes"
+    ch_isco_label_fr: "Physiothérapeute"
+    plan: A
+    synonyms:
+      - physiothérapeute
+      - kinésithérapeute
+      - Physiotherapeut
+      - thérapeute en réhabilitation
+    related_terms:
+      - rééducation
+      - réhabilitation
+      - mobilisation
+      - exercices thérapeutiques
+      - balnéothérapie
+
+  - isco_code: "2265"
+    isco_label_fr: "Diététiciens"
+    ch_isco_label_fr: "Diététicien"
+    plan: A
+    synonyms:
+      - diététicien
+      - nutritionniste
+      - diététiste
+      - Ernährungsberater
+    related_terms:
+      - nutrition clinique
+      - alimentation thérapeutique
+      - conseil nutritionnel
+
+  - isco_code: "2269"
+    isco_label_fr: "Professionnels de la santé non classés ailleurs"
+    ch_isco_label_fr: "Professionnel de la santé HES"
+    plan: A
+    synonyms:
+      - ergothérapeute
+      - logopédiste
+      - orthophoniste
+      - psychomotricien
+      - ostéopathe
+      - technicien en radiologie médicale
+      - technicien en analyses biomédicales
+    related_terms:
+      - thérapie occupationnelle
+      - rééducation fonctionnelle
+      - bilan clinique
+
+  - isco_code: "3211"
+    isco_label_fr: "Techniciens des sciences médicales et pharmaceutiques"
+    ch_isco_label_fr: "Technicien en analyses biomédicales"
+    plan: A
+    synonyms:
+      - technicien en analyses biomédicales
+      - laborantin médical
+      - technicien de laboratoire médical
+      - biologiste médical
+      - laborant
+    related_terms:
+      - analyses biologiques
+      - laboratoire clinique
+      - hématologie
+      - microbiologie
+      - immunologie
+
+  - isco_code: "3212"
+    isco_label_fr: "Techniciens en radiologie médicale"
+    ch_isco_label_fr: "Technicien en radiologie médicale"
+    plan: A
+    synonyms:
+      - technicien en imagerie médicale
+      - manipulateur en électroradiologie
+      - technicien RX
+      - Röntgenassistent
+    related_terms:
+      - imagerie médicale
+      - radiologie
+      - IRM
+      - scanner
+      - échographie
+
+  - isco_code: "3221"
+    isco_label_fr: "Assistants médicaux"
+    ch_isco_label_fr: "Assistant médical"
+    plan: A
+    synonyms:
+      - assistant médical
+      - assistante médicale
+      - aide médicale
+      - Medizinische Praxisassistent
+      - MPA
+    related_terms:
+      - cabinet médical
+      - secrétariat médical
+      - prise en charge patient
+      - dossier patient
+
+  - isco_code: "5321"
+    isco_label_fr: "Aides-soignants"
+    ch_isco_label_fr: "Assistant en soins et santé communautaire"
+    plan: A
+    synonyms:
+      - aide-soignant
+      - assistant en soins
+      - ASSC
+      - auxiliaire de soins
+      - Fachangestellte Gesundheit
+      - FaGe
+      - aide infirmier
+    related_terms:
+      - soins de base
+      - accompagnement patient
+      - nursing
+      - EMS
+      - soins à domicile
+      - CMS
+
+  - isco_code: "5322"
+    isco_label_fr: "Aides à domicile"
+    ch_isco_label_fr: "Aide familiale"
+    plan: A
+    synonyms:
+      - aide familiale
+      - aide ménagère
+      - assistante familiale
+      - aide à domicile
+      - auxiliaire de vie
+      - aide à la personne
+    related_terms:
+      - maintien à domicile
+      - soutien famille
+      - CMS
+      - Pro Senectute
+      - aide aux personnes âgées
+
+skills:
+  - key: soins_infirmiers
+    labels:
+      - soins infirmiers
+      - nursing
+      - soins de santé
+    isco_codes: ["2221", "5321"]
+    synonyms:
+      - soins cliniques
+      - prise en charge infirmière
+      - suivi infirmier
+      - dispensation des soins
+      - soins techniques
+
+  - key: soins_intensifs
+    labels:
+      - soins intensifs
+      - ICUS
+      - réanimation
+    isco_codes: ["2221"]
+    synonyms:
+      - unité de soins intensifs
+      - soins continus
+      - monitoring patient
+      - ventilation mécanique
+      - soins critiques
+
+  - key: urgences
+    labels:
+      - urgences
+      - soins d'urgence
+      - médecine d'urgence
+    isco_codes: ["2212", "2221", "3221"]
+    synonyms:
+      - service des urgences
+      - triage
+      - urgences hospitalières
+      - trauma center
+      - SMUR
+      - rescue
+
+  - key: dossier_patient
+    labels:
+      - dossier patient
+      - dossier médical
+    isco_codes: ["2221", "3221", "5321"]
+    synonyms:
+      - dossier de soins
+      - dossier informatisé patient
+      - DPI
+      - prescription médicale
+      - tracabilité soins
+
+  - key: prevention_hygiene
+    labels:
+      - hygiène hospitalière
+      - prévention infections
+    isco_codes: ["2221", "3221", "5321"]
+    synonyms:
+      - prévention et contrôle des infections
+      - PCI
+      - hygiène des mains
+      - précautions standard
+      - isolement

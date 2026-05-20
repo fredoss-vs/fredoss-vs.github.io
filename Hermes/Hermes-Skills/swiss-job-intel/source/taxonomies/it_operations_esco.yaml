@@ -1,0 +1,301 @@
+version: 1
+language: fr
+source: ESCO v1.2.1 + CH-ISCO-19 BFS
+description: >
+  Taxonomie compétences/occupations pour profils IT opérations, support applicatif,
+  services numériques (Plan A) et formation/insertion professionnelle (Plan B).
+  Utilisée par enrich_profile_esco.py pour étendre les primary_terms du profil candidat.
+
+occupations:
+  - isco_code: "3511"
+    isco_label_fr: "Techniciens en opérations informatiques"
+    ch_isco_label_fr: "Informaticien d'exploitation"
+    plan: A
+    synonyms:
+      - technicien exploitation informatique
+      - opérateur informatique
+      - opérateur systèmes
+      - ICT operations technician
+      - exploitant informatique
+      - opérateur centre informatique
+      - technicien d'exploitation
+    related_terms:
+      - monitoring
+      - supervision
+      - exploitation
+      - batch processing
+      - sauvegardes
+      - planification travaux
+
+  - isco_code: "3512"
+    isco_label_fr: "Techniciens d'assistance aux utilisateurs informatiques"
+    ch_isco_label_fr: "Spécialiste du support informatique"
+    plan: A
+    synonyms:
+      - technicien support informatique
+      - technicien support IT
+      - agent support technique
+      - IT support specialist
+      - support N1
+      - support N2
+      - agent service desk
+      - collaborateur support IT
+      - conseiller support technique
+      - spécialiste ICT support
+      - ICT supporter
+    related_terms:
+      - helpdesk
+      - service desk
+      - first contact
+      - premier contact
+      - ticketing
+      - ITSM
+      - gestion des incidents
+
+  - isco_code: "2522"
+    isco_label_fr: "Administrateurs de systèmes"
+    ch_isco_label_fr: "Administrateur de systèmes informatiques"
+    plan: A
+    synonyms:
+      - administrateur système
+      - admin système
+      - system administrator
+      - sysadmin
+      - administrateur réseau et systèmes
+      - administrateur infrastructure
+      - responsable infrastructure IT
+    related_terms:
+      - linux
+      - windows server
+      - active directory
+      - azure
+      - monitoring
+      - haute disponibilité
+      - virtualisation
+
+  - isco_code: "2511"
+    isco_label_fr: "Analystes de systèmes"
+    ch_isco_label_fr: "Analyste en systèmes informatiques"
+    plan: A
+    synonyms:
+      - analyste systèmes
+      - analyste fonctionnel IT
+      - analyste support applicatif
+      - technical application manager
+      - application manager
+      - responsable applications
+      - analyste métier IT
+      - functional analyst
+    related_terms:
+      - business analysis
+      - requirements
+      - spécifications fonctionnelles
+      - intégration applicative
+      - UAT
+
+  - isco_code: "1330"
+    isco_label_fr: "Directeurs des services informatiques"
+    ch_isco_label_fr: "Responsable informatique"
+    plan: A
+    synonyms:
+      - responsable IT
+      - coordinateur IT
+      - IT coordinator
+      - référent technique
+      - chargé de coordination IT
+      - responsable services numériques
+      - responsable digital
+    related_terms:
+      - gouvernance IT
+      - portefeuille projets
+      - SLA
+      - budget IT
+
+  - isco_code: "3423"
+    isco_label_fr: "Agents de l'emploi"
+    ch_isco_label_fr: "Conseiller en insertion professionnelle"
+    plan: B
+    synonyms:
+      - conseiller en emploi
+      - conseiller insertion professionnelle
+      - coach emploi
+      - accompagnateur socioprofessionnel
+      - référent emploi
+      - conseiller employabilité
+      - chargé d'insertion
+      - accompagnateur emploi
+    related_terms:
+      - insertion professionnelle
+      - retour à l'emploi
+      - employabilité
+      - bilan de compétences
+      - accompagnement individuel
+      - remobilisation
+      - ORP
+
+  - isco_code: "2359"
+    isco_label_fr: "Enseignants et formateurs non classés ailleurs"
+    ch_isco_label_fr: "Formateur d'adultes"
+    plan: B
+    synonyms:
+      - formateur adultes
+      - formateur d'adultes
+      - formateur outils numériques
+      - formateur en insertion
+      - formateur numérique
+      - coach opérationnel
+      - référent formation
+      - animateur de formation
+      - quality coach
+      - formateur CFC
+    related_terms:
+      - andragogie
+      - formation continue
+      - atelier
+      - pédagogie adultes
+      - blended learning
+      - autoformation
+      - accompagnement numérique
+      - e-learning
+
+skills:
+  - key: itsm
+    labels:
+      - ITSM
+      - IT Service Management
+      - gestion des services IT
+    isco_codes: ["3511", "3512"]
+    synonyms:
+      - gestion services informatiques
+      - service management
+      - IT service delivery
+      - ITSM specialist
+      - gestionnaire services IT
+
+  - key: incident_management
+    labels:
+      - gestion des incidents
+      - incident management
+      - gestionnaire incidents
+      - incident manager
+    isco_codes: ["3511", "3512", "2522"]
+    synonyms:
+      - responsable incidents informatiques
+      - gestionnaire d'incidents
+      - responsable gestion incidents
+      - incident handler
+      - escalation manager
+      - gestionnaire escalades
+      - responsable escalade
+
+  - key: service_desk
+    labels:
+      - service desk
+      - helpdesk
+      - help desk
+    isco_codes: ["3512"]
+    synonyms:
+      - centre de services
+      - centre d'assistance
+      - guichet informatique
+      - ICT service desk
+      - N1 support
+      - N2 support
+      - support premier niveau
+      - support deuxième niveau
+      - IT user support
+
+  - key: itil
+    labels:
+      - ITIL
+      - ITIL v4
+      - ITIL Foundation
+    isco_codes: ["3511", "3512", "2522"]
+    synonyms:
+      - best practices ITSM
+      - référentiel ITIL
+      - processus ITIL
+      - ITIL certified
+
+  - key: coordination_it
+    labels:
+      - coordinateur IT
+      - coordination IT
+    isco_codes: ["3511", "3512", "2511", "1330"]
+    synonyms:
+      - coordinateur informatique
+      - coordinateur technique
+      - IT coordinator
+      - référent technique
+      - chargé de coordination IT
+      - pilotage IT
+
+  - key: application_support
+    labels:
+      - support applicatif
+      - application support
+      - analyste support applicatif
+    isco_codes: ["3512", "2511"]
+    synonyms:
+      - support d'application
+      - functional support
+      - technicien support applicatif
+      - analyste fonctionnel support
+      - support logiciel
+      - support ERP
+      - support métier
+
+  - key: formation_utilisateurs
+    labels:
+      - formation des utilisateurs
+      - formation utilisateurs
+      - user training
+    isco_codes: ["3512", "2359"]
+    synonyms:
+      - formation des collaborateurs
+      - sensibilisation utilisateurs
+      - onboarding technique
+      - accompagnement adoption
+      - trainer utilisateurs
+      - formation informatique
+      - formation bureautique
+
+  - key: knowledge_management
+    labels:
+      - knowledge management
+      - gestion des connaissances
+    isco_codes: ["3511", "3512"]
+    synonyms:
+      - base de connaissances
+      - gestion documentaire
+      - documentation technique
+      - knowledge base
+      - wiki technique
+      - base de connaissance IT
+
+  - key: service_delivery
+    labels:
+      - service delivery
+      - delivery manager
+      - service delivery manager
+    isco_codes: ["3511", "3512", "1330"]
+    synonyms:
+      - gestionnaire de services
+      - pilotage des services
+      - livraison de services
+      - delivery coordinator
+      - IT delivery
+
+  - key: coaching_insertion
+    labels:
+      - coaching emploi
+      - coach emploi
+      - accompagnement insertion
+    isco_codes: ["3423", "2359"]
+    synonyms:
+      - coach professionnel
+      - coach en reconversion
+      - conseiller en transition professionnelle
+      - accompagnateur carrière
+      - accompagnement socioprofessionnel
+      - orientation professionnelle

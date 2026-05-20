@@ -8,7 +8,7 @@ Scrape les principales plateformes d'emploi suisses, enrichit les termes candida
 
 ## Qu'est-ce qu'un skill Hermes ?
 
-[Hermes](https://github.com/your-org/hermes-agent) est un framework d'agent LLM qui invoque des skills structurés depuis un fichier d'instructions `SKILL.md`. Chaque skill définit des phases exécutées dans l'ordre : lecture des entrées, exécution de scripts autonomes, présentation des résultats.
+[Hermes](https://github.com/NousResearch/hermes-agent) est un framework d'agent LLM qui invoque des skills structurés depuis un fichier d'instructions `SKILL.md`. Chaque skill définit des phases exécutées dans l'ordre : lecture des entrées, exécution de scripts autonomes, présentation des résultats.
 
 Ce skill est invoqué en plaçant `SKILL.md` dans le répertoire des skills de l'agent. L'agent lit le fichier, profile le candidat une seule fois, puis passe entièrement la main au pipeline Python.
 

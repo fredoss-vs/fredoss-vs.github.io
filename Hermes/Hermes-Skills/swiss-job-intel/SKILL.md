@@ -2,7 +2,7 @@
 name: swiss-job-intel
 description: Candidate profiling from cv.md / bilan.md / portfolio, keyword extraction, Swiss job market search, scoring, and dual export CSV + Markdown.
 version: 6.0.0
-author: derf
+author: fredoss-vs
 license: MIT
 platforms: [linux, macos, wsl]
 prerequisites:

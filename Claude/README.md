@@ -3,12 +3,8 @@
 Statusline riche pour [Claude Code](https://claude.ai/code) affichant en une ligne : modèle actif, fenêtre de contexte, tokens, niveau d'effort, coût de session et quota rate-limit.
 
 ```
-
-![statusline.png](/Claude/statusline.png)
+✦ Sonnet 4.6 (200k) ██████░░░░ 60% │ Δ 42.6k │ ▲ high │ $0.43 │ 󰥔 5h: 52% 1h30m │ 7d: 19%
 ```
-
-
-
 
 | Segment                      | Source JSON                               | Description                                 |
 | ---------------------------- | ----------------------------------------- | ------------------------------------------- |

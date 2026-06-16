@@ -3,8 +3,12 @@
 Statusline riche pour [Claude Code](https://claude.ai/code) affichant en une ligne : modèle actif, fenêtre de contexte, tokens, niveau d'effort, coût de session et quota rate-limit.
 
 ```
-✦ Sonnet 4.6 (200k) ██████░░░░ 60% │ Δ 42.6k │ ▲ high │ $0.43 │ 󰥔 5h: 52% 1h30m │ 7d: 19%
+
+![statusline.png](/Claude/statusline.png)
 ```
+
+
+
 
 | Segment                      | Source JSON                               | Description                                 |
 | ---------------------------- | ----------------------------------------- | ------------------------------------------- |
@@ -19,6 +23,8 @@ Statusline riche pour [Claude Code](https://claude.ai/code) affichant en une lig
 | `7d: 19%`                  | `rate_limits.seven_day.used_percentage` | Quota 7j consommé                          |
 
 Couleurs : vert < 70 %, jaune 70–89 %, rouge ≥ 90 % (quota et contexte).
+
+![statusline.png](/Claude/statusline.png)
 
 ---
 

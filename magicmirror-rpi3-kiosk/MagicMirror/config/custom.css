@@ -1,0 +1,20 @@
+/* Newsfeed — aligné à gauche, taille réduite */
+.region.bottom.bar {
+    width: 100%;
+    text-align: left;
+}
+
+/* Supprimer la marge basse du body pour coller les boutons au bas de l'écran */
+:root {
+    --gap-body-bottom: 0px;
+}
+
+.newsfeed-title {
+    font-size: 1.4rem !important;
+    opacity: 0.75;
+}
+
+.newsfeed-source {
+    font-size: 0.7rem !important;
+    opacity: 0.75;
+}

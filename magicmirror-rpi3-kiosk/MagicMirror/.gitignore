@@ -63,10 +63,7 @@ Temporary Items
 !/modules/MMM-pages
 !/modules/MMM-Timer
 
-# Ignore users config file but keep the samples.
-config/*
-!config/config.js.sample
-!config/custom.css.sample
+
 
 # Vim
 ## swap

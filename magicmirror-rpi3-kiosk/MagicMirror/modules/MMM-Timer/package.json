@@ -1,0 +1,19 @@
+{
+  "name": "mmm-timer",
+  "version": "1.0.0",
+  "description": "Module MagicMirror² — compte à rebours plein écran tactile avec verrouillage de page MMM-pages et alerte visuelle clignotante",
+  "keywords": [
+    "magicmirror",
+    "module",
+    "timer",
+    "countdown",
+    "mmm-pages"
+  ],
+  "author": "Fred",
+  "license": "MIT",
+  "main": "MMM-Timer.js",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {}
+}

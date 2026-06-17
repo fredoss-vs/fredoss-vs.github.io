@@ -1,0 +1,10 @@
+.DS_Store
+t.js
+t?.js
+node_modules/
+config.js
+
+.vscode/
+coverage
+/.scannerwork/
+*.crt

@@ -1,0 +1,15 @@
+/* Newsfeed — aligné à gauche, taille réduite */
+.region.bottom.bar {
+    width: 100%;
+    text-align: left;
+}
+
+.newsfeed-title {
+    font-size: 1.0rem !important; //Le !important force la règle à prendre le dessus sur .medium et .small peu importe la spécificité.
+    opacity: 0.75;
+}
+
+.newsfeed-source {
+    font-size: 0.7rem !important;
+    opacity: 0.75;
+}

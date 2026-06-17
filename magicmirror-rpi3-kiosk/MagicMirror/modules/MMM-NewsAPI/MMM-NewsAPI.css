@@ -1,0 +1,118 @@
+@keyframes hide {
+    0% { opacity:1; }
+    100% { opacity:0; }
+  }
+
+  @keyframes show {
+    0% { opacity:0; }
+    100% { opacity:1; }
+  }
+
+  .untouchable .touchable {
+    display:none;
+  }
+
+  .showArticle {
+    animation: show linear 1s;
+  }
+
+  .hideArticle {
+    animation: hide linear 1s;
+  }
+
+  /* Cache le canvas QR vide */
+  .NEWSAPI canvas {
+    display: none;
+  }
+
+  .NEWSAPI {
+    line-height: 1.2em;
+    max-width: 100%;
+  }
+
+  .NEWSAPI .header .title {
+    display: block;
+    color: #FFF;
+    font-size: 85%;
+    font-weight: bold;
+    margin-bottom: 4px;
+    white-space: normal;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .NEWSAPI .content {
+    padding: 4px 6px;
+    font-size: 75%;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+
+  .NEWSAPI .footer {
+    text-align: right;
+    margin-top: 2px;
+  }
+
+  .NEWSAPI .footer .sourceName,
+  .NEWSAPI .footer .publishedAt,
+  .NEWSAPI .footer .author {
+    font-size: 70%;
+    text-align: right;
+    display: inline-block;
+  }
+
+  .NEWSAPI .footer .sourceName {
+    text-transform: uppercase;
+  }
+
+  /* custom className */
+  .NEWSAPI .redTitle .title {
+    color: #F99;
+  }
+
+  /* Type: Horizontal — optimisé 800x480 */
+  .NEWSAPI.horizontal {
+    width: 100%;
+  }
+
+  .NEWSAPI.horizontal .content {
+    text-align: left;
+    overflow: hidden;
+  }
+
+  .NEWSAPI.horizontal .content .articleImage {
+    float: left;
+    margin-right: 8px;
+    margin-bottom: 4px;
+    max-width: 100px;
+    max-height: 70px;
+    object-fit: cover;
+  }
+
+  /* Type: Vertical */
+  .NEWSAPI.vertical {
+    font-size: calc(2vh);
+    width: 400px;
+  }
+
+  .NEWSAPI.vertical .content .articleImage {
+    max-width: 200px;
+    max-height: 130px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    object-fit: cover;
+  }
+
+  .NEWSAPI.vertical #NEWSAPI_CONTENT {
+    padding-bottom: 5px;
+  }
+
+  .NEWSAPI .article #NEWSAPI_QRCODE {
+    float: right;
+    margin-left: 20px;
+  }

@@ -1,0 +1,17 @@
+# Notes locales avec données sensibles
+MagicMirror Raspberry.md
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Windows
+$RECYCLE.BIN/

@@ -1,6 +1,10 @@
 # MagicMirror² — Raspberry Pi 3B + Écran DSI OSOYOO 5"
 
-Configuration personnalisée de **[MagicMirror²](https://magicmirror.builders/)** — plateforme open-source de miroir connecté modulaire — déployée sur Raspberry Pi 3B avec écran tactile DSI OSOYOO 5" sous Wayland/Chromium kiosk.
+Configuration personnalisée de **[MagicMirror²](https://magicmirror.builders/)** — plateforme open-source de miroir/écran connecté modulaire — déployée sur Raspberry Pi 3B avec écran tactile DSI OSOYOO 5" sous Wayland/Chromium kiosk.
+
+![screen_1](image/README/screen_1.jpg)
+
+![screen_2](image/README/screen_2.jpg)
 
 > Ce dépôt contient la configuration, les modules utilisés et la documentation d'installation propres à ce setup.
 > Le code source de MagicMirror² provient du [dépôt officiel](https://github.com/MagicMirrorOrg/MagicMirror) — voir [docs.magicmirror.builders](https://docs.magicmirror.builders/) et [modules.magicmirror.builders](https://modules.magicmirror.builders/) pour la référence complète.
@@ -9,24 +13,24 @@ Configuration personnalisée de **[MagicMirror²](https://magicmirror.builders/)
 
 ## Sources
 
-| Ressource | Lien |
-|---|---|
-| Site officiel | [magicmirror.builders](https://magicmirror.builders/) |
-| Documentation | [docs.magicmirror.builders](https://docs.magicmirror.builders/) |
-| Catalogue de modules | [modules.magicmirror.builders](https://modules.magicmirror.builders/) |
-| Dépôt GitHub | [MagicMirrorOrg/MagicMirror](https://github.com/MagicMirrorOrg/MagicMirror) |
-| Écran | [OSOYOO 5" DSI Touch Screen](https://osoyoo.com/2021/09/23/osoyoo-5-inch-hdmi-800-x-480-capacitive-touch-lcd-display/) |
+| Ressource            | Lien                                                                                                                    |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Site officiel        | [magicmirror.builders](https://magicmirror.builders/)                                                                      |
+| Documentation        | [docs.magicmirror.builders](https://docs.magicmirror.builders/)                                                            |
+| Catalogue de modules | [modules.magicmirror.builders](https://modules.magicmirror.builders/)                                                      |
+| Dépôt GitHub       | [MagicMirrorOrg/MagicMirror](https://github.com/MagicMirrorOrg/MagicMirror)                                                |
+| Écran               | [OSOYOO 5&#34; DSI Touch Screen](https://osoyoo.com/2021/09/23/osoyoo-5-inch-hdmi-800-x-480-capacitive-touch-lcd-display/) |
 
 ### Modules tiers utilisés
 
-| Module | Source |
-|---|---|
-| MMM-pages | [edward-shen/MMM-pages](https://github.com/edward-shen/MMM-pages) |
-| MMM-page-indicator | [edward-shen/MMM-page-indicator](https://github.com/edward-shen/MMM-page-indicator) |
-| MMM-MQTT | [ottopaulsen/MMM-MQTT](https://github.com/ottopaulsen/MMM-MQTT) |
-| MMM-AVStock | [lavolp3/MMM-AVStock](https://github.com/lavolp3/MMM-AVStock) |
-| MMM-NewsAPI | [hobbyquaker/MMM-NewsAPI](https://github.com/hobbyquaker/MMM-NewsAPI) |
-| **MMM-Timer** | **Module non officiel — développé pour ce projet** |
+| Module              | Source                                                                           |
+| ------------------- | -------------------------------------------------------------------------------- |
+| MMM-pages           | [edward-shen/MMM-pages](https://github.com/edward-shen/MMM-pages)                   |
+| MMM-page-indicator  | [edward-shen/MMM-page-indicator](https://github.com/edward-shen/MMM-page-indicator) |
+| MMM-MQTT            | [ottopaulsen/MMM-MQTT](https://github.com/ottopaulsen/MMM-MQTT)                     |
+| MMM-AVStock         | [lavolp3/MMM-AVStock](https://github.com/lavolp3/MMM-AVStock)                       |
+| MMM-NewsAPI         | [hobbyquaker/MMM-NewsAPI](https://github.com/hobbyquaker/MMM-NewsAPI)               |
+| **MMM-Timer** | **Module non officiel — développé pour ce projet**                      |
 
 > La configuration complète de chaque module est documentée dans [`MODULES.md`](MODULES.md).
 
@@ -34,11 +38,11 @@ Configuration personnalisée de **[MagicMirror²](https://magicmirror.builders/)
 
 ## Matériel
 
-| Composant | Modèle |
-|---|---|
-| SBC | Raspberry Pi 3B (ARMv8 / arm64) |
-| Écran | OSOYOO 5" DSI Touch Screen (800×480, capacitif) |
-| OS | Raspberry Pi OS Lite 64-bit — Debian Trixie (kernel 6.12.x) |
+| Composant | Modèle                                                      |
+| --------- | ------------------------------------------------------------ |
+| SBC       | Raspberry Pi 3B (ARMv8 / arm64)                              |
+| Écran    | OSOYOO 5" DSI Touch Screen (800×480, capacitif)             |
+| OS        | Raspberry Pi OS Lite 64-bit — Debian Trixie (kernel 6.12.x) |
 
 ---
 
@@ -148,6 +152,7 @@ sudo loginctl enable-linger $USER
 ```
 
 > **Reboot obligatoire** pour que les groupes soient effectifs :
+>
 > ```bash
 > sudo reboot
 > ```
@@ -293,15 +298,15 @@ MagicMirror doit s'afficher sur l'écran DSI dans les 15 secondes suivant le dé
 
 ## Notes techniques
 
-| Sujet | Détail |
-|---|---|
-| Electron | Non utilisé — incompatible Pi 3B, erreur d'installation sur ARMv8 |
-| Node.js via nvm | Hors PATH système — chemin absolu obligatoire dans les services systemd |
-| GPU | VC4 V3D 2.1 — ES 2.0 uniquement, `--disable-gpu` obligatoire dans Chromium |
-| EDID | `Failed to parse EDID` sur l'écran OSOYOO — sans impact fonctionnel |
-| Erreurs dbus/UPower/GCM | Bénignes, n'affectent pas le fonctionnement |
-| Accès réseau | MagicMirror accessible sur `http://<ip>:8080` depuis le réseau local |
-| Node.js | v26.x validé — v22.x minimum requis par MagicMirror² |
+| Sujet                   | Détail                                                                      |
+| ----------------------- | ---------------------------------------------------------------------------- |
+| Electron                | Non utilisé — incompatible Pi 3B, erreur d'installation sur ARMv8          |
+| Node.js via nvm         | Hors PATH système — chemin absolu obligatoire dans les services systemd    |
+| GPU                     | VC4 V3D 2.1 — ES 2.0 uniquement,`--disable-gpu` obligatoire dans Chromium |
+| EDID                    | `Failed to parse EDID` sur l'écran OSOYOO — sans impact fonctionnel      |
+| Erreurs dbus/UPower/GCM | Bénignes, n'affectent pas le fonctionnement                                 |
+| Accès réseau          | MagicMirror accessible sur `http://<ip>:8080` depuis le réseau local      |
+| Node.js                 | v26.x validé — v22.x minimum requis par MagicMirror²                      |
 
 ---
 

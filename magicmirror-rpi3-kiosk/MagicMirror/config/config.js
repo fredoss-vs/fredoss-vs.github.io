@@ -119,7 +119,7 @@ let config = {
                                                 port: "1883",
                                                 clientId: "000000000000000000000000",
                                                 user: "000000000000000000000000",
-                                                password: "000000000000000000000000+0ZJrrdXno",
+                                                password: "000000000000000000000000",
                                                 subscriptions: [
                                                         {
                                                                 topic: "channels/2554355/subscribe",

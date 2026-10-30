@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 # ╔═══════════════════════════════════════════════════════════════════════════╗
-# ║  claude-statusline — Windows-compatible (Git Bash)                       ║
-# ║  ✦ Sonnet 4.6 (200k) ████░░░░ 42% ↓48k ↑3k │ Δ ↓12k ↑1k │ ▲ high   ║
-# ║  │ 󰥔 5h 52% (1h30m) │ 󰃰 7d 19% │  main +2 │ +3/-1 │ $0.43         ║
+# ║  claude-statusline — Windows-compatible (Git Bash), macOS, Linux         ║
+# ║  ✦ Opus 5.5 (1M) █░░░░░░░ 6% ↓64.2k ↑430 │ Δ ↓12k ↑1k │ ▲ high        ║
+# ║  │ 󰥔 5h 40% (1h30m) │ 󰃰 7d 43% (2d14h) │ 󰘬 main +2 ~1 │ +3/-1 │ $0.56 ║
 # ╚═══════════════════════════════════════════════════════════════════════════╝
-# Dépendances : jq, awk, curl, git  (tous inclus dans Git for Windows)
+# Dépendances : jq, awk (obligatoires) — curl, git (optionnels)
+#               tous inclus dans Git for Windows, sauf jq
 
 input=$(cat)
 [ -z "$input" ] && printf "Claude" && exit 0
@@ -18,7 +19,6 @@ JQ_BIN="$(command -v jq 2>/dev/null || true)"
 # ── Répertoire temporaire (Windows-safe) ─────────────────────────────────────
 CACHE_DIR="${TMPDIR:-${HOME}/.claude/.cache}"
 mkdir -p "$CACHE_DIR" 2>/dev/null
-DELTA_FILE="${CACHE_DIR}/claude-statusline-delta.json"
 CACHE_FILE="${CACHE_DIR}/claude-statusline-cache.json"
 CACHE_TTL=90
 
@@ -26,7 +26,6 @@ CACHE_TTL=90
 RST=$'\033[0m'
 B=$'\033[1m'
 PURPLE=$'\033[1;38;2;200;140;255m'
-BLUE=$'\033[1;38;2;80;180;255m'
 CYAN=$'\033[1;38;2;0;230;220m'
 GREEN=$'\033[1;38;2;80;255;120m'
 YELLOW=$'\033[1;38;2;255;225;50m'
@@ -66,64 +65,92 @@ mini_bar() {
 # ── Format tokens (42601 → "42.6k") ─────────────────────────────────────────
 fmt_tokens() {
     local t=$1
-    if   (( t >= 1000000 )); then printf "%.1fM" "$(echo "$t" | awk '{printf "%.1f",$1/1000000}')";
-    elif (( t >= 1000 ));    then printf "%.1fk" "$(echo "$t" | awk '{printf "%.1f",$1/1000}')";
+    if   (( t >= 1000000 )); then awk -v t="$t" 'BEGIN{printf "%.1fM", t/1000000}'
+    elif (( t >= 1000 ));    then awk -v t="$t" 'BEGIN{printf "%.1fk", t/1000}'
     else                          printf "%d" "$t"; fi
 }
 
-# ── ISO → epoch (GNU date, Git Bash Windows) ─────────────────────────────────
+# ── Arrondi d'un nombre éventuellement décimal ("43.7" → 44) ────────────────
+round() { awk -v n="${1:-0}" 'BEGIN{printf "%.0f", n}'; }
+
+# ── ISO 8601 UTC → epoch (GNU date, sinon BSD date) ─────────────────────────
 iso_to_epoch() {
-    local iso="${1%%.*}"; iso="${iso%%Z}"
-    date -d "${iso/T/ }Z" +%s 2>/dev/null
+    local iso="${1%%[.+]*}"; iso="${iso%Z}"; iso="${iso/T/ }"
+    [[ -z "$iso" ]] && return
+    date -u -d "$iso" +%s 2>/dev/null || date -u -j -f '%Y-%m-%d %H:%M:%S' "$iso" +%s 2>/dev/null
 }
 
-# ── mtime fichier (GNU stat, Git Bash Windows) ───────────────────────────────
-file_mtime() { stat -c %Y "$1" 2>/dev/null || echo 0; }
+# ── mtime fichier (GNU stat, sinon BSD stat) ────────────────────────────────
+file_mtime() { stat -c %Y "$1" 2>/dev/null || stat -f %m "$1" 2>/dev/null || echo 0; }
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  PARSE JSON STDIN
+#  PARSE JSON STDIN (un seul appel jq, une valeur par ligne)
 # ══════════════════════════════════════════════════════════════════════════════
-model=$(        echo "$input" | "$JQ_BIN" -r '.model.display_name // "Claude"')
-cwd=$(          echo "$input" | "$JQ_BIN" -r '.cwd // ""')
-size=$(         echo "$input" | "$JQ_BIN" -r '.context_window.context_window_size // 200000')
-input_tokens=$( echo "$input" | "$JQ_BIN" -r '.context_window.current_usage.input_tokens // 0')
-cache_create=$( echo "$input" | "$JQ_BIN" -r '.context_window.current_usage.cache_creation_input_tokens // 0')
-cache_read=$(   echo "$input" | "$JQ_BIN" -r '.context_window.current_usage.cache_read_input_tokens // 0')
-output_tokens=$(echo "$input" | "$JQ_BIN" -r '.context_window.total_output_tokens // 0')
-lines_added=$(  echo "$input" | "$JQ_BIN" -r '.cost.total_lines_added // 0')
-lines_removed=$(echo "$input" | "$JQ_BIN" -r '.cost.total_lines_removed // 0')
-total_cost=$(   echo "$input" | "$JQ_BIN" -r '.cost.total_cost_usd // empty')
+mapfile -t F < <(printf '%s' "$input" | "$JQ_BIN" -r '
+    (.model.display_name // "Claude"),
+    (.cwd // .workspace.current_dir // ""),
+    (.session_id // "default"),
+    (.version // ""),
+    (.context_window.context_window_size // 200000),
+    (.context_window.current_usage.input_tokens // 0),
+    (.context_window.current_usage.cache_creation_input_tokens // 0),
+    (.context_window.current_usage.cache_read_input_tokens // 0),
+    (.context_window.total_output_tokens // 0),
+    (.context_window.used_percentage // 0),
+    (.cost.total_lines_added // 0),
+    (.cost.total_lines_removed // 0),
+    (.cost.total_cost_usd // ""),
+    (.effort.level // ""),
+    (.rate_limits.five_hour.used_percentage // ""),
+    (.rate_limits.five_hour.resets_at // ""),
+    (.rate_limits.seven_day.used_percentage // ""),
+    (.rate_limits.seven_day.resets_at // "")
+' 2>/dev/null)
+CR=$'\r'; F=("${F[@]%"$CR"}")   # jq.exe (Windows) sort des fins de ligne CRLF
+
+model=${F[0]:-Claude};   cwd=${F[1]};            session_id=${F[2]:-default}
+cc_version=${F[3]};      size=${F[4]:-200000}
+input_tokens=${F[5]:-0}; cache_create=${F[6]:-0}; cache_read=${F[7]:-0}
+output_tokens=${F[8]:-0}; used_pct=$(round "${F[9]}")
+lines_added=${F[10]:-0}; lines_removed=${F[11]:-0}; total_cost=${F[12]}
+EFFORT=${F[13]}
+fh_pct=${F[14]}; fh_epoch=${F[15]}; wd_pct=${F[16]}; wd_epoch=${F[17]}
 
 current_tokens=$(( input_tokens + cache_create + cache_read ))
 total_all_tokens=$(( current_tokens + output_tokens ))
 (( size == 0 )) && size=200000
 ctx_pct=$(( current_tokens * 100 / size ))
+(( current_tokens == 0 )) && ctx_pct=$used_pct
+(( ctx_pct > 100 )) && ctx_pct=100
 
 if   (( size >= 1000000 )); then ctx_label="$(( size / 1000000 ))M"
 elif (( size >= 1000 ));    then ctx_label="$(( size / 1000 ))k"
 else                              ctx_label="$size"; fi
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  DELTA TOKENS entre rafraîchissements
+#  DELTA TOKENS entre rafraîchissements (un fichier par session)
 # ══════════════════════════════════════════════════════════════════════════════
+DELTA_FILE="${CACHE_DIR}/claude-statusline-delta-${session_id//[^A-Za-z0-9_-]/}.json"
 DELTA_SEG=""
-prev_total=0; prev_input=0; prev_output=0
+prev_total=0; prev_input=0; prev_output=0; last_d_in=0; last_d_out=0
 if [[ -f "$DELTA_FILE" ]]; then
-    prev_total=$( "$JQ_BIN" -r '.total  // 0' "$DELTA_FILE" 2>/dev/null)
-    prev_input=$( "$JQ_BIN" -r '.input  // 0' "$DELTA_FILE" 2>/dev/null)
-    prev_output=$("$JQ_BIN" -r '.output // 0' "$DELTA_FILE" 2>/dev/null)
+    IFS=$'\t' read -r prev_total prev_input prev_output last_d_in last_d_out < <(
+        "$JQ_BIN" -r '[.total//0, .input//0, .output//0, .last_delta_in//0, .last_delta_out//0] | @tsv' "$DELTA_FILE" 2>/dev/null)
+    last_d_out=${last_d_out%"$CR"}
+else
+    # Nouvelle session : purge des fichiers delta / git de plus de 2 jours
+    find "$CACHE_DIR" -maxdepth 1 \( -name 'claude-statusline-delta-*.json' -o -name 'gitcache-*' \) \
+        -mtime +2 -delete 2>/dev/null
 fi
-delta_total=$(( total_all_tokens - prev_total ))
-delta_input=$(( current_tokens   - prev_input ))
-delta_output=$(( output_tokens   - prev_output ))
+delta_total=$(( total_all_tokens - ${prev_total:-0} ))
+delta_input=$(( current_tokens   - ${prev_input:-0} ))
+delta_output=$(( output_tokens   - ${prev_output:-0} ))
 
 if (( delta_total > 0 )); then
     echo "{\"total\":${total_all_tokens},\"input\":${current_tokens},\"output\":${output_tokens},\"ts\":${NOW},\"last_delta_in\":${delta_input},\"last_delta_out\":${delta_output}}" > "$DELTA_FILE"
     DELTA_SEG="${SEP}${LIME}Δ${RST} ${DIMW}↓$(fmt_tokens "$delta_input") ↑$(fmt_tokens "$delta_output")${RST}"
-elif (( delta_total == 0 && prev_total > 0 )); then
-    last_d_in=$( "$JQ_BIN" -r '.last_delta_in  // 0' "$DELTA_FILE" 2>/dev/null)
-    last_d_out=$("$JQ_BIN" -r '.last_delta_out // 0' "$DELTA_FILE" 2>/dev/null)
-    (( last_d_in > 0 || last_d_out > 0 )) && \
+elif (( delta_total == 0 && ${prev_total:-0} > 0 )); then
+    (( ${last_d_in:-0} > 0 || ${last_d_out:-0} > 0 )) && \
         DELTA_SEG="${SEP}${DIMW}Δ ↓$(fmt_tokens "$last_d_in") ↑$(fmt_tokens "$last_d_out")${RST}"
 else
     echo "{\"total\":${total_all_tokens},\"input\":${current_tokens},\"output\":${output_tokens},\"ts\":${NOW},\"last_delta_in\":0,\"last_delta_out\":0}" > "$DELTA_FILE"
@@ -132,27 +159,30 @@ fi
 TOK_SEG="${DIMW}↓$(fmt_tokens "$current_tokens") ↑$(fmt_tokens "$output_tokens")${RST}"
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  EFFORT (depuis stdin)
+#  EFFORT (masqué si absent)
 # ══════════════════════════════════════════════════════════════════════════════
-EFFORT=$(echo "$input" | "$JQ_BIN" -r '.effort.level // "medium"')
 case "$EFFORT" in
-    low)  EFFORT_SEG="${DIMW}▽ low${RST}"   ;;
-    high) EFFORT_SEG="${ORANGE}▲ high${RST}" ;;
-    max)  EFFORT_SEG="${PINK}⬆ max${RST}"   ;;
-    *)    EFFORT_SEG="${YELLOW}◆ med${RST}"  ;;
+    "")     EFFORT_SEG="" ;;
+    low)    EFFORT_SEG="${SEP}${DIMW}▽ low${RST}"      ;;
+    medium) EFFORT_SEG="${SEP}${YELLOW}◆ med${RST}"    ;;
+    high)   EFFORT_SEG="${SEP}${ORANGE}▲ high${RST}"   ;;
+    xhigh)  EFFORT_SEG="${SEP}${RED}▲▲ xhigh${RST}"    ;;
+    max)    EFFORT_SEG="${SEP}${PINK}⬆ max${RST}"      ;;
+    *)      EFFORT_SEG="${SEP}${DIMW}◆ ${EFFORT}${RST}" ;;
 esac
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  GIT BRANCH
+#  GIT BRANCH (cache 5s par répertoire)
 # ══════════════════════════════════════════════════════════════════════════════
 GIT_SEG=""
-if [[ -n "$cwd" ]]; then
+if [[ -n "$cwd" ]] && command -v git >/dev/null 2>&1; then
     CF="${CACHE_DIR}/gitcache-$(echo "$cwd" | cksum | cut -d' ' -f1)"
     BRANCH="" STAGED=0 MODIFIED=0
     if [[ -f "$CF" ]] && (( NOW - $(file_mtime "$CF") < 5 )); then
         IFS=$'\t' read -r BRANCH STAGED MODIFIED < "$CF"
     elif git -C "$cwd" -c gc.auto=0 rev-parse --git-dir >/dev/null 2>&1; then
         BRANCH=$(git -C "$cwd" -c gc.auto=0 branch --show-current 2>/dev/null)
+        [[ -z "$BRANCH" ]] && BRANCH="@$(git -C "$cwd" rev-parse --short HEAD 2>/dev/null)"
         while IFS= read -r l; do
             [[ "${l:0:1}" != " " && "${l:0:1}" != "?" ]] && ((STAGED++))
             [[ "${l:1:1}" != " " && "${l:1:1}" != "?" ]] && ((MODIFIED++))
@@ -168,81 +198,75 @@ if [[ -n "$cwd" ]]; then
 fi
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  RATE LIMITS — API (cache 90s) avec fallback stdin
+#  RATE LIMITS — stdin (officiel) avec repli API oauth/usage (cache 90s)
 # ══════════════════════════════════════════════════════════════════════════════
 get_token() {
-    # macOS Keychain (silencieux sur Windows)
+    # macOS Keychain (silencieux ailleurs)
     local blob; blob=$(security find-generic-password -s "Claude Code-credentials" -w 2>/dev/null)
     if [[ -n "$blob" ]]; then
         local t; t=$(echo "$blob" | "$JQ_BIN" -r '.claudeAiOauth.accessToken // empty' 2>/dev/null)
         [[ -n "$t" ]] && echo "$t" && return
     fi
-    # Fichier credentials (Windows + fallback macOS)
+    # Fichier credentials (Windows, Linux)
     local creds="$HOME/.claude/.credentials.json"
     [[ -f "$creds" ]] && "$JQ_BIN" -r '.claudeAiOauth.accessToken // empty' "$creds" 2>/dev/null
 }
 
-usage=""
-if [[ -f "$CACHE_FILE" ]] && (( NOW - $(file_mtime "$CACHE_FILE") <= CACHE_TTL )); then
-    usage=$(cat "$CACHE_FILE")
-fi
-if [[ -z "$usage" ]]; then
-    token=$(get_token)
-    if [[ -n "$token" ]]; then
-        resp=$(curl -s --max-time 5 \
-            -H "Authorization: Bearer $token" \
-            -H "anthropic-beta: oauth-2025-04-20" \
-            -H "User-Agent: claude-code/2.1.34" \
-            "https://api.anthropic.com/api/oauth/usage" 2>/dev/null)
-        if echo "$resp" | "$JQ_BIN" -e '.five_hour' >/dev/null 2>&1; then
-            usage="$resp"; echo "$resp" > "$CACHE_FILE"
+if [[ -z "$fh_pct" ]] && command -v curl >/dev/null 2>&1; then
+    usage=""
+    if [[ -f "$CACHE_FILE" ]] && (( NOW - $(file_mtime "$CACHE_FILE") <= CACHE_TTL )); then
+        usage=$(cat "$CACHE_FILE")
+    else
+        token=$(get_token); token=${token%"$CR"}
+        if [[ -n "$token" ]]; then
+            resp=$(curl -s --max-time 5 \
+                -H "Authorization: Bearer $token" \
+                -H "anthropic-beta: oauth-2025-04-20" \
+                -H "User-Agent: claude-code/${cc_version:-2.1.0}" \
+                "https://api.anthropic.com/api/oauth/usage" 2>/dev/null)
+            if echo "$resp" | "$JQ_BIN" -e '.five_hour.utilization' >/dev/null 2>&1; then
+                usage="$resp"; echo "$resp" > "$CACHE_FILE"
+            fi
         fi
     fi
+    if [[ -n "$usage" ]]; then
+        IFS=$'\t' read -r fh_pct fh_iso wd_pct wd_iso < <(echo "$usage" | "$JQ_BIN" -r \
+            '[.five_hour.utilization // "", .five_hour.resets_at // "", .seven_day.utilization // "", .seven_day.resets_at // ""] | @tsv')
+        wd_iso=${wd_iso%"$CR"}
+        fh_epoch=$(iso_to_epoch "$fh_iso")
+        wd_epoch=$(iso_to_epoch "$wd_iso")
+    fi
 fi
 
-COST_SEG=""
+# Compte à rebours : "1h30m" (5h) ou "2d14h" (7j)
+countdown() {
+    local epoch=$1 kind=$2
+    [[ "$epoch" =~ ^[0-9]+$ ]] || return
+    local rem=$(( epoch - NOW ))
+    (( rem > 0 )) || return
+    if [[ "$kind" == h ]]; then
+        printf " %s(%dh%02dm)%s" "$DIMW" $(( rem / 3600 )) $(( (rem % 3600) / 60 )) "$RST"
+    else
+        printf " %s(%dd%02dh)%s" "$DIMW" $(( rem / 86400 )) $(( (rem % 86400) / 3600 )) "$RST"
+    fi
+}
+
 RATE_SEG=""
-
-if [[ -n "$usage" ]]; then
-    # Source : API (timestamps ISO)
-    fh_pct=$(echo "$usage" | "$JQ_BIN" -r '.five_hour.utilization // 0' | awk '{printf "%.0f",$1}')
-    fh_epoch=$(iso_to_epoch "$(echo "$usage" | "$JQ_BIN" -r '.five_hour.resets_at // empty')")
-    wd_pct=$(echo "$usage" | "$JQ_BIN" -r '.seven_day.utilization // 0' | awk '{printf "%.0f",$1}')
-    wd_epoch=$(iso_to_epoch "$(echo "$usage" | "$JQ_BIN" -r '.seven_day.resets_at // empty')")
-else
-    # Fallback : données stdin (timestamps epoch)
-    fh_pct=$(echo "$input" | "$JQ_BIN" -r '.rate_limits.five_hour.used_percentage // 0' | awk '{printf "%.0f",$1}')
-    fh_epoch=$(echo "$input" | "$JQ_BIN" -r '.rate_limits.five_hour.resets_at // empty')
-    wd_pct=$(echo "$input" | "$JQ_BIN" -r '.rate_limits.seven_day.used_percentage // 0' | awk '{printf "%.0f",$1}')
-    wd_epoch=$(echo "$input" | "$JQ_BIN" -r '.rate_limits.seven_day.resets_at // empty')
+if [[ -n "$fh_pct" ]]; then
+    fh_pct=$(round "$fh_pct")
+    RATE_SEG+="${SEP}$(color_pct "$fh_pct")󰥔 5h ${fh_pct}%${RST}$(countdown "$fh_epoch" h)"
+fi
+if [[ -n "$wd_pct" ]]; then
+    wd_pct=$(round "$wd_pct")
+    RATE_SEG+="${SEP}$(color_pct "$wd_pct")󰃰 7d ${wd_pct}%${RST}$(countdown "$wd_epoch" d)"
 fi
 
-# Temps restant 5h
-fh_cd=""
-if [[ -n "$fh_epoch" ]] && (( fh_epoch > 0 )) 2>/dev/null; then
-    rem=$(( fh_epoch - NOW ))
-    if (( rem > 0 )); then
-        fh_h=$(( rem / 3600 )); fh_m=$(( (rem % 3600) / 60 ))
-        fh_cd=" ${DIMW}(${fh_h}h$(printf '%02d' $fh_m)m)${RST}"
-    fi
-fi
-
-# Temps restant 7j
-wd_cd=""
-if [[ -n "$wd_epoch" ]] && (( wd_epoch > 0 )) 2>/dev/null; then
-    rem=$(( wd_epoch - NOW ))
-    if (( rem > 0 )); then
-        wd_d=$(( rem / 86400 )); wd_h=$(( (rem % 86400) / 3600 ))
-        wd_cd=" ${DIMW}(${wd_d}d$(printf '%02d' $wd_h)h)${RST}"
-    fi
-fi
-
-fh_color=$(color_pct "$fh_pct")
-wd_color=$(color_pct "$wd_pct")
-RATE_SEG="${SEP}${fh_color}󰥔 5h ${fh_pct}%${RST}${fh_cd}${SEP}${wd_color}󰃰 7d ${wd_pct}%${RST}${wd_cd}"
-
+# ══════════════════════════════════════════════════════════════════════════════
+#  COÛT (masqué si nul)
+# ══════════════════════════════════════════════════════════════════════════════
+COST_SEG=""
 [[ -n "$total_cost" && "$total_cost" != "0" ]] && \
-    COST_SEG="${SEP}${GOLD}\$$(printf '%.2f' "$total_cost")${RST}"
+    COST_SEG="${SEP}${GOLD}\$$(awk -v c="$total_cost" 'BEGIN{printf "%.2f", c}')${RST}"
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  CONTEXTE : ████░░░░ 42%
@@ -256,10 +280,10 @@ LINES_SEG="${SEP}${GREEN}+${lines_added}${RST}${GRAY}/${RST}${RED}-${lines_remov
 
 LINE="${PURPLE}✦ ${model}${RST} ${DIMW}(${ctx_label})${RST} ${CTX_SEG} ${TOK_SEG}"
 LINE+="${DELTA_SEG}"
-LINE+="${SEP}${EFFORT_SEG}"
+LINE+="${EFFORT_SEG}"
 LINE+="${RATE_SEG}"
 LINE+="${GIT_SEG}"
 LINE+="${LINES_SEG}"
 LINE+="${COST_SEG}"
 
-printf "%b\n" "$LINE"
+printf "%s\n" "$LINE"
